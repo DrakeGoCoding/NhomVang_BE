@@ -4,7 +4,8 @@ mongoose.plugin(slug);
 
 const newsSchema = mongoose.Schema({
 	title: { type: String, required: true },
-	author: { type: mongoose.Schema.Types.ObjectId, ref: "User", rquired: true },
+	author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+	body: { type: String, required: true },
 	slug: { type: String, slug: ["title"], unique: true },
 	createdDate: { type: Date, default: Date.now },
 	modifiedDate: { type: Date, default: Date.now },
