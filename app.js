@@ -20,11 +20,16 @@ app.use(xss());
 app.use(hpp());
 
 const accessLogStream = rfs.createStream('access.log', {
-	interval: '1d',
+	interval: '7d',
 	path: path.join(__dirname, 'loggers')
 });
 morgan.token('body', (req) => JSON.stringify(req.body));
-app.use(morgan('combined', { stream: accessLogStream }));
+app.use(
+	morgan(
+		':remote-addr - :remote-user [:date[clf]] ":method :url :body HTTP/:http-version :status :res[content-length]" ":referrer" ":user-agent"',
+		{ stream: accessLogStream }
+	)
+);
 
 app.use('/auth', authRoute);
 

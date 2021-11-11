@@ -4,7 +4,7 @@ const validator = require('validator');
 const { INVALID_PHOTOURL, INVALID_DOB, INVALID_EMAIL, INVALID_PHONENUMBER } = require('../constants/error');
 
 const userSchema = mongoose.Schema({
-	username: { type: String, unique: true, required: true },
+	username: { type: String, unique: true, required: true, trim: true },
 	hash: { type: String, required: true, select: false },
 	salt: { type: String, required: true, select: false },
 	role: {
@@ -14,9 +14,12 @@ const userSchema = mongoose.Schema({
 	},
 	displayname: {
 		type: String,
-		default: () => this.username
+		default: function () {
+			return this.username;
+		},
+		trim: true
 	},
-	photourl: { 
+	photourl: {
 		type: String,
 		validate: [validator.isURL, INVALID_PHOTOURL]
 	},
@@ -24,7 +27,7 @@ const userSchema = mongoose.Schema({
 		type: String,
 		enum: ["male", "female"],
 	},
-	dob: { 
+	dob: {
 		type: Date,
 		validate: [validator.isDate, INVALID_DOB]
 	},
@@ -32,7 +35,7 @@ const userSchema = mongoose.Schema({
 		type: String,
 		validate: [validator.isEmail, INVALID_EMAIL]
 	},
-	phonenumber: { 
+	phonenumber: {
 		type: String,
 		validate: [validator.isMobilePhone, INVALID_PHONENUMBER]
 	},
