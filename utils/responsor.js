@@ -1,5 +1,5 @@
 const responseUser = user => {
-	const { hash, salt, ...rest } = user;
+	const { _id, __v, hash, salt, ...rest } = user;
 	return rest;
 }
 

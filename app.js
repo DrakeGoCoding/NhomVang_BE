@@ -6,11 +6,10 @@ const morgan = require('morgan');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const authRoute = require('./routes/auth.route');
 const { handleGlobalError } = require('./middlewares/error.middleware');
 const AppError = require('./utils/appError');
-const error = require('./constants/error');
-
-const LANGUAGE = process.env.LANGUAGE;
+const { UNDEFINED_ROUTE } = require('./constants/error');
 
 const app = express();
 app.use(cors());
@@ -27,12 +26,10 @@ const accessLogStream = rfs.createStream('access.log', {
 morgan.token('body', (req) => JSON.stringify(req.body));
 app.use(morgan('combined', { stream: accessLogStream }));
 
-app.use("*", (req, res, next) => {
-	const err = new AppError(
-		404,
-		"fail",
-		error[LANGUAGE].UNDEFINED_ROUTE
-	);
+app.use('/auth', authRoute);
+
+app.use('*', (req, res, next) => {
+	const err = new AppError(404, "fail", UNDEFINED_ROUTE);
 	next(err, req, res, next);
 });
 app.use(handleGlobalError);

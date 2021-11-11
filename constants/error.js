@@ -1,14 +1,13 @@
 module.exports = {
-	"vi": {
-		SYSTEM_ERROR: "hệ thống xảy ra sự cố. vui lòng liên hệ với chúng tôi để được tư vấn.",
-		UNDEFINED_ROUTE: "route không tồn tại.",
-		FORBIDDEN: "yêu cầu quyền truy cập để thực hiện hành động này.",
-		FOUND_USER: "tên đăng nhập đã được sử dụng."
-	},
-	"en": {
-		SYSTEM_ERROR: "some errors happen. please contact us for solution.",
-		UNDEFINED_ROUTE: "undefined route.",
-		FORBIDDEN: "you are not allowed to do this action.",
-		FOUND_USER: "username has been registered."
-	}
+	SYSTEM_ERROR: "Hệ thống xảy ra sự cố. vui lòng liên hệ với chúng tôi để được tư vấn.",
+	UNDEFINED_ROUTE: "Route không tồn tại.",
+	FORBIDDEN: "Yêu cầu quyền truy cập để thực hiện hành động này.",
+	FOUND_USER: "Tên đăng nhập đã được sử dụng.",
+	MISSING_AUTH_INPUT: "Vui lòng nhập tên đăng nhập và mật khẩu.",
+	WRONG_AUTH_INPUT: "Tên đăng nhập hoặc mật khẩu không đúng.",
+
+	INVALID_EMAIL: "Email không hợp lệ",
+	INVALID_PHOTOURL: "URL của ảnh không hợp lệ",
+	INVALID_DOB: "Ngày sinh không hợp lệ",
+	INVALID_PHONENUMBER: "Số điện thoại di động không hợp lệ"
 }
