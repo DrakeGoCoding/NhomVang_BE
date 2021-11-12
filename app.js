@@ -12,8 +12,10 @@ const authRoute = require('@routes/auth.route');
 const { handleGlobalError } = require('@middlewares/error.middleware');
 const AppError = require('@utils/appError');
 const { UNDEFINED_ROUTE } = require('@constants/error');
+const admin = require('@admin/app');
 
 const app = express();
+
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
@@ -22,7 +24,7 @@ app.use(xss());
 app.use(hpp());
 
 const accessLogStream = rfs.createStream('access.log', {
-	interval: '7d',
+	interval: '30d',
 	path: path.join(__dirname, 'loggers')
 });
 morgan.token('body', (req) => JSON.stringify(req.body));
@@ -33,6 +35,7 @@ app.use(
 	)
 );
 
+app.use('/admin', admin);
 app.use('/auth', authRoute);
 
 app.use('*', (req, res, next) => {

@@ -43,6 +43,7 @@
 		"@routes": "./routes",
 		"@services": "./services",
 		"@templates": "./templates",
-		"@utils": "./utils"
+		"@utils": "./utils",
+		"@admin": "./admin"
 	}
 }
