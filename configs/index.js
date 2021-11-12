@@ -1,8 +1,5 @@
+const cloudinary = require('./cloudinary');
+
 module.exports = {
-	development: {
-
-	},
-	production: {
-
-	}
+	cloudinary
 }
