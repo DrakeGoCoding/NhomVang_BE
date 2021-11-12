@@ -6,10 +6,12 @@ const morgan = require('morgan');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
-const authRoute = require('./routes/auth.route');
-const { handleGlobalError } = require('./middlewares/error.middleware');
-const AppError = require('./utils/appError');
-const { UNDEFINED_ROUTE } = require('./constants/error');
+
+require('module-alias/register');
+const authRoute = require('@routes/auth.route');
+const { handleGlobalError } = require('@middlewares/error.middleware');
+const AppError = require('@utils/appError');
+const { UNDEFINED_ROUTE } = require('@constants/error');
 
 const app = express();
 app.use(cors());

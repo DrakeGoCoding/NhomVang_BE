@@ -1,5 +1,5 @@
-const AppError = require("../utils/appError");
-const { FORBIDDEN } = require("../constants/error");
+const AppError = require("@utils/appError");
+const { FORBIDDEN } = require("@constants/error");
 
 const authenticate = async (req, res, next) => {
 

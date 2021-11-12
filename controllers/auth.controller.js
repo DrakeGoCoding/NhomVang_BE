@@ -1,6 +1,6 @@
-const authService = require('../services/auth.service');
-const AppError = require('../utils/appError');
-const { MISSING_AUTH_INPUT } = require('../constants/error');
+const authService = require('@services/auth.service');
+const AppError = require('@utils/appError');
+const { MISSING_AUTH_INPUT } = require('@constants/error');
 
 const login = async (req, res, next) => {
 	try {

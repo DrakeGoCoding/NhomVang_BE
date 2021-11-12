@@ -1,9 +1,9 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
-const { responseUser } = require('../utils/responsor');
-const AppError = require('../utils/appError');
-const { WRONG_AUTH_INPUT, FOUND_USER } = require('../constants/error');
+const User = require('@models/user');
+const { responseUser } = require('@utils/responsor');
+const AppError = require('@utils/appError');
+const { WRONG_AUTH_INPUT, FOUND_USER } = require('@constants/error');
 
 /**
  * Generate a token from a record id
