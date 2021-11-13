@@ -9,10 +9,12 @@ const { NOT_FOUND_NEWS } = require('@constants/error');
  * @DrakeGoCoding 11/13/2021 
  */
 const createNews = async (news) => {
+	const news = await News.create(news);
+
 	return {
 		statusCode: 201,
-		data: {}
-	}
+		data: { news: responseNews(news.toJSON()) }
+	};
 }
 
 /**
@@ -38,10 +40,15 @@ const getNews = async (slug) => {
  * @DrakeGoCoding 11/13/2021 
  */
 const updateNews = async (slug, news) => {
+	const news = News.findOneAndUpdate({ slug }, news, { new: true });
+	if (!news) {
+		throw new AppError(404, "fail", NOT_FOUND_NEWS);
+	}
+
 	return {
 		statusCode: 200,
-		data: {}
-	}
+		data: { news: responseNews(news.toJSON()) }
+	};
 }
 
 /**
