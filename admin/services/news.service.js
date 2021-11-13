@@ -1,4 +1,4 @@
-const News = require('../../models/news');
+const News = require('@models/news');
 const AppError = require('@utils/appError');
 const { responseNews } = require('@utils/responsor');
 const { NOT_FOUND_NEWS } = require('@constants/error');
