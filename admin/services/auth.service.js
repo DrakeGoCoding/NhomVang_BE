@@ -10,10 +10,12 @@ const { WRONG_AUTH_INPUT } = require('@constants/error');
  * @param {String} password 
  */
 const login = async (username, password) => {
-	// check if
-	// - username exists
-	// - user is admin
-	// - password is correct
+	/*
+	check if
+	- username exists
+	- user is admin
+	- password is correct
+	*/
 	const user = await User.findOne({ username }).select('+hash');
 	if (!user || user.role !== "admin" || !(await user.isCorrectPassword(password, user.hash))) {
 		throw new AppError(401, "fail", WRONG_AUTH_INPUT);
