@@ -1,23 +1,9 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../models/user');
-const { responseUser } = require('../utils/responsor');
-const AppError = require('../utils/appError');
-const { WRONG_AUTH_INPUT, FOUND_USER } = require('../constants/error');
-
-/**
- * Generate a token from a record id
- * @param {String} id Record ID
- * @returns {String} JsonWebToken String
- * @DrakeGoCoding 11/10/2021
- */
-const generateToken = id => {
-	return jwt.sign(
-		{ id },
-		process.env.JWT_SECRET,
-		{ expiresIn: process.env.JWT_EXPIRES_IN }
-	);
-}
+const User = require('@models/user');
+const { generateToken } = require('@utils/token');
+const { responseUser } = require('@utils/responsor');
+const AppError = require('@utils/appError');
+const { WRONG_AUTH_INPUT, FOUND_USER } = require('@constants/error');
 
 /**
  * Login a registered account

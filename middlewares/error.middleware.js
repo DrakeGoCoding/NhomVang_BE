@@ -1,4 +1,4 @@
-const { SYSTEM_ERROR } = require('../constants/error');
+const { SYSTEM_ERROR } = require('@constants/error');
 
 const handleGlobalError = (err, req, res, next) => {
 	err.statusCode = err.statusCode || 500;

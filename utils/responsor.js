@@ -3,6 +3,12 @@ const responseUser = user => {
 	return rest;
 }
 
+const responseNews = news => {
+	const { _id, __v, author, ...rest } = news;
+	return { ...rest, author: author.displayname };
+}
+
 module.exports = {
-	responseUser
+	responseUser,
+	responseNews
 }

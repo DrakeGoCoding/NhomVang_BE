@@ -19,18 +19,33 @@
 	"homepage": "https://github.com/DrakeGoCoding/nhomvang_be#readme",
 	"dependencies": {
 		"bcrypt": "^5.0.1",
+		"cloudinary": "^1.27.1",
 		"cors": "^2.8.5",
 		"dotenv": "^10.0.0",
 		"express": "^4.17.1",
 		"express-mongo-sanitize": "^2.1.0",
 		"hpp": "^0.2.3",
 		"jsonwebtoken": "^8.5.1",
+		"module-alias": "^2.2.2",
 		"mongoose": "^6.0.12",
-		"mongoose-slug-generator": "^1.0.4",
+		"mongoose-slug-updater": "^3.3.0",
 		"morgan": "^1.10.0",
 		"nodemon": "^2.0.14",
 		"rotating-file-stream": "^2.1.6",
 		"validator": "^13.7.0",
 		"xss-clean": "^0.1.1"
+	},
+	"_moduleAliases": {
+		"@root": ".",
+		"@configs": "./configs",
+		"@constants": "./constants",
+		"@controllers": "./controllers",
+		"@middlewares": "./middlewares",
+		"@models": "./models",
+		"@routes": "./routes",
+		"@services": "./services",
+		"@templates": "./templates",
+		"@utils": "./utils",
+		"@admin": "./admin"
 	}
 }
