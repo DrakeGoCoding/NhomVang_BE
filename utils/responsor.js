@@ -4,7 +4,7 @@ const responseUser = user => {
 }
 
 const responseNews = news => {
-	const { _id, __v, ...rest } = news;
+	const { _id, __v, author, ...rest } = news;
 	return { ...rest, author: author.displayname };
 }
 

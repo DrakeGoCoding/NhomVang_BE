@@ -4,7 +4,13 @@ const validator = require('validator');
 const { INVALID_PHOTOURL, INVALID_DOB, INVALID_EMAIL, INVALID_PHONENUMBER } = require('../constants/error');
 
 const userSchema = mongoose.Schema({
-	username: { type: String, unique: true, required: true, trim: true },
+	username: {
+		type: String,
+		unique: true,
+		required: true,
+		trim: true,
+		immutable: true
+	},
 	hash: { type: String, required: true, select: false },
 	salt: { type: String, required: true, select: false },
 	role: {
@@ -43,12 +49,28 @@ const userSchema = mongoose.Schema({
 		city: { type: String },
 		district: { type: String },
 		detail: { type: String }
-	}
+	},
+	createdDate: { type: Date, default: Date.now, immutable: true },
+	modifiedDate: { type: Date, default: Date.now },
 });
 
 userSchema.pre('save', function (next) {
 	next();
 });
+
+userSchema.pre(
+	[
+		'update',
+		'updateOne',
+		'updateMany',
+		'findOneAndUpdate',
+		'findByIdAndUpdate'
+	],
+	async function (next) {
+		this.modifiedDate = Date.now();
+		next();
+	}
+);
 
 userSchema.methods.isCorrectPassword = async (typedPassword, hashPassword) => {
 	return await bcrypt.compare(typedPassword, hashPassword);

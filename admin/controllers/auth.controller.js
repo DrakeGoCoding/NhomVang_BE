@@ -4,7 +4,7 @@ const { MISSING_AUTH_INPUT } = require('@constants/error');
 
 const login = async (req, res, next) => {
 	try {
-		const { username, password } = req.body;
+		const { username, password } = req.body.user;
 
 		// check if username and password are filled
 		if (!username || !password) {

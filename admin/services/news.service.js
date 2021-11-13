@@ -1,4 +1,4 @@
-const News = require('@models/news');
+const News = require('../../models/news');
 const AppError = require('@utils/appError');
 const { responseNews } = require('@utils/responsor');
 const { NOT_FOUND_NEWS } = require('@constants/error');
@@ -9,27 +9,12 @@ const { NOT_FOUND_NEWS } = require('@constants/error');
  * @DrakeGoCoding 11/13/2021 
  */
 const createNews = async (news) => {
-	const news = await News.create(news);
+	let createdNews = await News.create(news);
+	createdNews = await News.populate(createdNews, "author")
 
 	return {
 		statusCode: 201,
-		data: { news: responseNews(news.toJSON()) }
-	};
-}
-
-/**
- * Get a news data by slug
- * @param {String} slug 
- * @DrakeGoCoding 11/13/2021
- */
-const getNews = async (slug) => {
-	const news = await News.findOne({ slug }).populate('author');
-	if (!news) {
-		throw new AppError(404, "fail", NOT_FOUND_NEWS);
-	}
-	return {
-		statusCode: 200,
-		data: { news: responseNews(news.toJSON()) }
+		data: { news: responseNews(createdNews.toJSON()) }
 	};
 }
 
@@ -40,14 +25,16 @@ const getNews = async (slug) => {
  * @DrakeGoCoding 11/13/2021 
  */
 const updateNews = async (slug, news) => {
-	const news = News.findOneAndUpdate({ slug }, news, { new: true });
-	if (!news) {
+	let updatedNews = await News.findOneAndUpdate({ slug }, news, { new: true });
+	if (!updatedNews) {
 		throw new AppError(404, "fail", NOT_FOUND_NEWS);
 	}
 
+	updatedNews = await News.populate(updatedNews, "author")
+
 	return {
 		statusCode: 200,
-		data: { news: responseNews(news.toJSON()) }
+		data: { news: responseNews(updatedNews.toJSON()) }
 	};
 }
 
@@ -69,7 +56,6 @@ const deleteNews = async (slug) => {
 
 module.exports = {
 	createNews,
-	getNews,
 	updateNews,
 	deleteNews
 }

@@ -8,7 +8,6 @@ router.use(restrictTo("admin"));
 router.post('/', newsController.createNews);
 router
 	.route('/:slug')
-	.get(newsController.getNews)
 	.put(newsController.updateNews)
 	.delete(newsController.deleteNews);
 
