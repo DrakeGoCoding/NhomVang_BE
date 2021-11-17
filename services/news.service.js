@@ -1,4 +1,4 @@
-const News = require('../models/news');
+const News = require('@models/news');
 const AppError = require('@utils/appError');
 const { responseNews } = require('@utils/responsor');
 const { NOT_FOUND_NEWS } = require('@constants/error');
@@ -6,8 +6,8 @@ const { NOT_FOUND_NEWS } = require('@constants/error');
 const getAllNews = async (limit = 7, offset = 0) => {
 	const newsList = await News.find()
 		.sort({ modifiedDate: -1 })
-		.limit(limit)
-		.skip(offset);
+		.skip(offset)
+		.limit(limit);
 
 	return {
 		statusCode: newsList.length > 0 ? 200 : 204,

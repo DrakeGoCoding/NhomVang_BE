@@ -1,7 +1,12 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
-const { INVALID_PHOTOURL, INVALID_DOB, INVALID_EMAIL, INVALID_PHONENUMBER } = require('../constants/error');
+const { 
+	INVALID_PHOTOURL, 
+	INVALID_DOB, 
+	INVALID_EMAIL, 
+	INVALID_PHONENUMBER 
+} = require('@constants/error');
 
 const userSchema = mongoose.Schema({
 	username: {
