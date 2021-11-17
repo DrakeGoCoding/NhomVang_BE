@@ -15,7 +15,6 @@ const { handleGlobalError } = require('@middlewares/error.middleware');
 const AppError = require('@utils/appError');
 const { UNDEFINED_ROUTE } = require('@constants/error');
 const admin = require('@admin/app');
-const { uploadImage } = require('./utils/cloudinary');
 
 const app = express();
 
