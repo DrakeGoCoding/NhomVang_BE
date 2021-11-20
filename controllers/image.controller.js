@@ -19,7 +19,7 @@ const upload = async (req, res, next) => {
 			throw new AppError(400, "fail", INVALID_IMAGE);
 		}
 
-		const { statusCode, data } = await uploadImage(data);
+		const { statusCode, data } = await uploadImage(image);
 		res.status(statusCode).json(data);
 	} catch (error) {
 		next(error);
