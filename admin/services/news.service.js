@@ -51,7 +51,7 @@ const deleteNews = async (slug) => {
 	return {
 		statusCode: 204,
 		data: null
-	}
+	};
 }
 
 module.exports = {

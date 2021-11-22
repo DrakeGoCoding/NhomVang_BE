@@ -31,7 +31,7 @@ const createNews = async (req, res, next) => {
 
 const updateNews = async (req, res, next) => {
 	try {
-		const author = req.user.id;
+		const author = req.user._id;
 		const { slug } = req.params;
 		const { title, body } = req.body.news;
 
