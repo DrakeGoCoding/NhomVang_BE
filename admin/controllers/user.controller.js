@@ -7,8 +7,7 @@ const {
 
 const getAllUsers = async (req, res, next) => {
 	try {
-		const { limit, offset } = req.query;
-		const filter = req.body;
+		const { limit, offset, ...filter } = req.query;
 		const { statusCode, data } = await userService.getAllUsers(filter, limit, offset);
 		res.status(statusCode).json(data);
 	} catch (error) {
@@ -43,8 +42,11 @@ const updateUser = async (req, res, next) => {
 
 		const user = Object.assign(req.body.user, {
 			username: undefined,
+			hash: undefined,
+			salt: undefined,
+			role: undefined,
 			createdDate: undefined,
-			modifiedDate: Date.now()
+			modifiedDate: Date.now(),
 		});
 
 		const { statusCode, data } = await userService.updateUser(username, user);
