@@ -11,6 +11,7 @@ module.exports = {
 	MISSING_AUTH_INPUT: "Vui lòng nhập tên đăng nhập và mật khẩu.",
 	MISSING_IMAGE_INPUT: "Vui lòng cung cấp dữ liệu ảnh.",
 	MISSING_NEWS_INPUT: "Vui lòng nhập đủ các thông tin bắt buộc cho bài viết.",
+	MISSING_USER_INPUT: "Vui lòng cung cấp dữ liệu người dùng.",
 	NOT_FOUND_NEWS: "Bản tin không tồn tại",
 	NOT_FOUND_USER: "Người dùng không tồn tại.",
 	SYSTEM_ERROR: "Hệ thống xảy ra sự cố. vui lòng liên hệ với chúng tôi để được tư vấn.",

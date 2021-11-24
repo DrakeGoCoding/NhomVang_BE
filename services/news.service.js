@@ -12,7 +12,7 @@ const getAllNews = async (limit = 7, offset = 0) => {
 	return {
 		statusCode: newsList.length > 0 ? 200 : 204,
 		data: { newsList: [] || newsList.map(news => responseNews(news.toJSON())) }
-	}
+	};
 }
 
 /**
