@@ -56,7 +56,39 @@ const register = async (username, password) => {
 	};
 }
 
+/**
+ * Update user account
+ * @param {User} user 
+ * @DrakeGoCoding 11/22/2021
+ */
+const updateUser = async (user) => {
+	const { username, password } = user;
+	let hash, salt;
+
+	if (password) {
+		// generate salt then hash password
+		const saltRounds = Number.parseInt(process.env.SALT_ROUNDS);
+		salt = bcrypt.genSaltSync(saltRounds);
+		hash = bcrypt.hashSync(password, salt);
+	}
+
+	const updatedUser = await User.findOneAndUpdate(
+		{ username },
+		{ ...user, hash, salt },
+		{ new: true }
+	);
+	if (!updatedUser) {
+		throw new AppError(404, "fail", NOT_FOUND_USER);
+	}
+
+	return {
+		statusCode: 200,
+		data: { user: responseUser(updatedUser.toJSON()) }
+	};
+}
+
 module.exports = {
 	login,
-	register
+	register,
+	updateUser
 }

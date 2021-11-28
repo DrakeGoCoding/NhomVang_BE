@@ -47,7 +47,7 @@ const getAllUsers = async (filter = {}, limit = 20, offset = 0) => {
  * Create a new admin user
  * @param {String} username 
  * @param {String} password 
- * @returns 
+ * @DrakeGoCoding 11/22/2021
  */
 const createUser = async (username, password) => {
 	// check if username is registered
@@ -74,7 +74,7 @@ const createUser = async (username, password) => {
 /**
  * Update an admin user by username
  * @param {User} user 
- * @returns 
+ * @DrakeGoCoding 11/22/2021
  */
 const updateUser = async (user) => {
 	const { username, password } = user;
@@ -102,6 +102,11 @@ const updateUser = async (user) => {
 	};
 }
 
+/**
+ * Delete an account by username
+ * @param {String} username 
+ * @DrakeGoCoding 11/22/2021
+ */
 const deleteUser = async (username) => {
 	const user = await User.findOneAndDelete({ username }, { new: true });
 	if (!user) {
