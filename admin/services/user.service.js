@@ -24,7 +24,7 @@ const getAllUsers = async (filter = {}, limit = 20, offset = 0) => {
 		.limit(limit);
 
 	return {
-		statusCode: newsList.length > 0 ? 200 : 204,
+		statusCode: userList.length > 0 ? 200 : 204,
 		data: { userList: [] || userList.map(user => responseUser(user.toJSON())) }
 	};
 }
