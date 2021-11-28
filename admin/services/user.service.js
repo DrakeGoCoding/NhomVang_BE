@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
-const User = require('@models/user');
+// const User = require('@models/user');
+const User = require('../../models/user')
 const { responseUser } = require('@utils/responsor');
 const AppError = require('@utils/appError');
 const { NOT_FOUND_USER, FOUND_USER } = require('@constants/error');
@@ -18,14 +19,28 @@ const { NOT_FOUND_USER, FOUND_USER } = require('@constants/error');
  * @DrakeGoCoding 11/22/2021
  */
 const getAllUsers = async (filter = {}, limit = 20, offset = 0) => {
-	const userList = await User
+	const query = User
+		.collection
 		.find(filter)
-		.skip(offset)
-		.limit(limit);
+		.sort({ modifiedDate: -1 });
+	const userList = await query.skip(offset).limit(limit).toArray();
+
+	if (!userList || userList.length === 0) {
+		return {
+			statusCode: 204,
+			data: {
+				userList: [],
+				total: 0
+			}
+		}
+	}
 
 	return {
-		statusCode: userList.length > 0 ? 200 : 204,
-		data: { userList: [] || userList.map(user => responseUser(user.toJSON())) }
+		statusCode: 200,
+		data: { 
+			userList: userList.map(user => responseUser(user)),
+			total: userList.length
+		}
 	};
 }
 
@@ -59,12 +74,25 @@ const createUser = async (username, password) => {
 
 /**
  * Update an admin user by username
- * @param {String} username 
  * @param {User} user 
  * @returns 
  */
-const updateUser = async (username, user) => {
-	const updatedUser = await User.findOneAndUpdate({ username }, user, { new: true });
+const updateUser = async (user) => {
+	const { username, password } = user;
+	let hash, salt;
+
+	if (password) {
+		// generate salt then hash password
+		const saltRounds = Number.parseInt(process.env.SALT_ROUNDS);
+		salt = bcrypt.genSaltSync(saltRounds);
+		hash = bcrypt.hashSync(password, salt);
+	}
+
+	const updatedUser = await User.findOneAndUpdate(
+		{ username },
+		{ ...user, hash, salt },
+		{ new: true }
+	);
 	if (!updatedUser) {
 		throw new AppError(404, "fail", NOT_FOUND_USER);
 	}
