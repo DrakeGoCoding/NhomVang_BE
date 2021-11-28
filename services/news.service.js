@@ -4,6 +4,7 @@ const { responseNews } = require('@utils/responsor');
 const { NOT_FOUND_NEWS } = require('@constants/error');
 
 const getAllNews = async (limit = 7, offset = 0) => {
+	console.log(limit, offset);
 	const query = News
 		.collection
 		.find()
