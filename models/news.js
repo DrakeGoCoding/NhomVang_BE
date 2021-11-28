@@ -4,9 +4,9 @@ mongoose.plugin(slug);
 
 const newsSchema = mongoose.Schema({
 	title: { type: String, required: true },
-	author: { 
-		type: mongoose.Schema.Types.ObjectId, 
-		ref: "User", 
+	author: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "User",
 		required: true
 	},
 	content: { type: String, required: true },
@@ -16,6 +16,20 @@ const newsSchema = mongoose.Schema({
 	createdDate: { type: Date, default: Date.now, immutable: true },
 	modifiedDate: { type: Date, default: Date.now },
 });
+
+newsSchema.pre(
+	[
+		'update',
+		'updateOne',
+		'updateMany',
+		'findOneAndUpdate',
+		'findByIdAndUpdate'
+	],
+	async function (next) {
+		this.modifiedDate = Date.now();
+		next();
+	}
+)
 
 const News = mongoose.model('News', newsSchema);
 module.exports = News;
