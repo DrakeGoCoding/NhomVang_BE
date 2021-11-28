@@ -1,13 +1,21 @@
 const userService = require('@admin/services/user.service');
 const AppError = require('@utils/appError');
 const {
+	INVALID_INPUT,
 	MISSING_AUTH_INPUT,
 	MISSING_USER_INPUT
 } = require('@constants/error');
 
 const getAllUsers = async (req, res, next) => {
 	try {
-		const { limit, offset, ...filter } = req.query;
+		let { limit, offset, ...filter } = req.query;
+		limit = parseInt(limit) || undefined;
+		offset = parseInt(offset) || undefined;
+
+		if ((limit && !Number.isInteger(limit)) || (offset && !Number.isInteger(offset))) {
+			throw new AppError(400, "fail", INVALID_INPUT);
+		}
+
 		const { statusCode, data } = await userService.getAllUsers(filter, limit, offset);
 		res.status(statusCode).json(data);
 	} catch (error) {
@@ -33,7 +41,7 @@ const createUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
 	try {
-		const { username } = req.params;
+		const { username } = req.body.user;
 
 		// check if username is filled
 		if (!username) {
@@ -41,7 +49,6 @@ const updateUser = async (req, res, next) => {
 		}
 
 		const user = Object.assign(req.body.user, {
-			username: undefined,
 			hash: undefined,
 			salt: undefined,
 			role: undefined,
@@ -49,7 +56,7 @@ const updateUser = async (req, res, next) => {
 			modifiedDate: Date.now(),
 		});
 
-		const { statusCode, data } = await userService.updateUser(username, user);
+		const { statusCode, data } = await userService.updateUser(user);
 		res.status(statusCode).json(data);
 	} catch (error) {
 		next(error);
@@ -58,7 +65,7 @@ const updateUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
 	try {
-		const { username } = req.params;
+		const { username } = req.body;
 
 		// check if username is filled
 		if (!username) {

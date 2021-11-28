@@ -4,6 +4,7 @@ module.exports = {
 	INVALID_DOB: "Ngày sinh không hợp lệ.",
 	INVALID_EMAIL: "Email không hợp lệ.",
 	INVALID_IMAGE: "Ảnh không hợp lệ.",
+	INVALID_INPUT: "Dữ liệu đầu vào không hợp lệ.",
 	INVALID_PHONENUMBER: "Số điện thoại di động không hợp lệ.",
 	INVALID_PHOTOURL: "URL của ảnh không hợp lệ.",
 	INVALID_TOKEN: "Token đã hết hạn hoặc không hợp lệ.",
