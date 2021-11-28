@@ -34,7 +34,37 @@ const register = async (req, res, next) => {
 	}
 }
 
+const updateUser = async (req, res, next) => {
+	try {
+		const { username } = req.body.user;
+
+		// check if username is filled
+		if (!username) {
+			throw new AppError(400, "fail", MISSING_USER_INPUT);
+		}
+
+		// check if user is allowed to update account
+		if (username !== req.user.username) {
+			throw new AppError(403, "fail", FORBIDDEN);
+		}
+
+		const user = Object.assign(req.body.user, {
+			hash: undefined,
+			salt: undefined,
+			role: undefined,
+			createdDate: undefined,
+			modifiedDate: Date.now(),
+		});
+
+		const { statusCode, data } = await authService.updateUser(user);
+		res.status(statusCode).json(data);
+	} catch (error) {
+		next(error);
+	}
+}
+
 module.exports = {
 	login,
-	register
+	register,
+	updateUser
 }

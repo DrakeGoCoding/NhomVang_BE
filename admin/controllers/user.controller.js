@@ -1,20 +1,12 @@
 const userService = require('@admin/services/user.service');
 const AppError = require('@utils/appError');
-const {
-	INVALID_INPUT,
-	MISSING_AUTH_INPUT,
-	MISSING_USER_INPUT
-} = require('@constants/error');
+const { MISSING_AUTH_INPUT, MISSING_USER_INPUT } = require('@constants/error');
 
 const getAllUsers = async (req, res, next) => {
 	try {
 		let { limit, offset, ...filter } = req.query;
 		limit = parseInt(limit) || undefined;
 		offset = parseInt(offset) || undefined;
-
-		if ((limit && !Number.isInteger(limit)) || (offset && !Number.isInteger(offset))) {
-			throw new AppError(400, "fail", INVALID_INPUT);
-		}
 
 		const { statusCode, data } = await userService.getAllUsers(filter, limit, offset);
 		res.status(statusCode).json(data);

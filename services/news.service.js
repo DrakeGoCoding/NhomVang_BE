@@ -4,14 +4,29 @@ const { responseNews } = require('@utils/responsor');
 const { NOT_FOUND_NEWS } = require('@constants/error');
 
 const getAllNews = async (limit = 7, offset = 0) => {
-	const newsList = await News.find()
-		.sort({ modifiedDate: -1 })
-		.skip(offset)
-		.limit(limit);
+	console.log(limit, offset);
+	const query = News
+		.collection
+		.find()
+		.sort({ modifiedDate: -1 });
+	const newsList = await query.skip(offset).limit(limit).toArray();
+
+	if (!newsList || newsList.length === 0) {
+		return {
+			statusCode: 204,
+			data: {
+				newsList: [],
+				total: 0
+			}
+		};
+	}
 
 	return {
-		statusCode: newsList.length > 0 ? 200 : 204,
-		data: { newsList: [] || newsList.map(news => responseNews(news.toJSON())) }
+		statusCode: 200,
+		data: { 
+			newsList: newsList.map(news => responseNews(news)),
+			total: newsList.length
+		}
 	};
 }
 

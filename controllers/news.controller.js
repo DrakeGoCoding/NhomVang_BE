@@ -4,7 +4,10 @@ const { UNDEFINED_ROUTE } = require('@constants/error');
 
 const getAllNews = async (req, res, next) => {
 	try {
-		const { limit, offset } = req.query;
+		let { limit, offset } = req.query;
+		limit = parseInt(limit) || undefined;
+		offset = parseInt(offset) || undefined;
+
 		const { statusCode, data } = await newsService.getAllNews(limit, offset);
 		res.status(statusCode).json(data);
 	} catch (error) {
