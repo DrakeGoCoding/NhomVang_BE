@@ -8,10 +8,10 @@ const {
 const createNews = async (req, res, next) => {
 	try {
 		const author = req.user._id;
-		const { title, body } = req.body.news;
+		const { title, content } = req.body.news;
 
-		// check if title and body are filled
-		if (!title || !body) {
+		// check if title and content are filled
+		if (!title || !content) {
 			throw new AppError(400, "fail", MISSING_NEWS_INPUT);
 		}
 

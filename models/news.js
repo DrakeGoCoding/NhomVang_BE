@@ -9,7 +9,7 @@ const newsSchema = mongoose.Schema({
 		ref: "User", 
 		required: true
 	},
-	body: { type: String, required: true },
+	content: { type: String, required: true },
 	thumbnail: { type: String },
 	description: { type: String },
 	slug: { type: String, slug: ["title"], unique: true },
