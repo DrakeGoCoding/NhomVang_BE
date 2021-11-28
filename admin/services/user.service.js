@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
-// const User = require('@models/user');
-const User = require('../../models/user')
+const User = require('@models/user');
 const { responseUser } = require('@utils/responsor');
 const AppError = require('@utils/appError');
 const { NOT_FOUND_USER, FOUND_USER } = require('@constants/error');
@@ -32,7 +31,7 @@ const getAllUsers = async (filter = {}, limit = 20, offset = 0) => {
 				userList: [],
 				total: 0
 			}
-		}
+		};
 	}
 
 	return {
