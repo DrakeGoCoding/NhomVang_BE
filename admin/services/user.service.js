@@ -31,8 +31,7 @@ const getAllUsers = async (filter = {}, limit = 20, offset = 0) => {
 			statusCode: 204,
 			data: {
 				userList: [],
-				total: 0,
-				totalPage: 0
+				total: 0
 			}
 		};
 	}
@@ -41,8 +40,7 @@ const getAllUsers = async (filter = {}, limit = 20, offset = 0) => {
 		statusCode: 200,
 		data: { 
 			userList: userList.map(user => responseUser(user)),
-			total,
-			totalPage: Math.ceil(total / limit)
+			total
 		}
 	};
 }

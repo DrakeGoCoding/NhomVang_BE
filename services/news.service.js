@@ -17,8 +17,7 @@ const getAllNews = async (limit = 7, offset = 0) => {
 			statusCode: 204,
 			data: {
 				newsList: [],
-				total,
-				totalPage: 0
+				total
 			}
 		};
 	}
@@ -27,8 +26,7 @@ const getAllNews = async (limit = 7, offset = 0) => {
 		statusCode: 200,
 		data: { 
 			newsList: newsList.map(news => responseNews(news)),
-			total,
-			totalPage: Math.ceil(total / limit)
+			total
 		}
 	};
 }
