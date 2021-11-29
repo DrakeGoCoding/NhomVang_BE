@@ -22,14 +22,17 @@ const getAllUsers = async (filter = {}, limit = 20, offset = 0) => {
 		.collection
 		.find(filter)
 		.sort({ modifiedDate: -1 });
+
+	const total = await query.count();
 	const userList = await query.skip(offset).limit(limit).toArray();
 
-	if (!userList || userList.length === 0) {
+	if (!total || !userList || userList.length === 0) {
 		return {
 			statusCode: 204,
 			data: {
 				userList: [],
-				total: 0
+				total: 0,
+				totalPage: 0
 			}
 		};
 	}
@@ -38,7 +41,8 @@ const getAllUsers = async (filter = {}, limit = 20, offset = 0) => {
 		statusCode: 200,
 		data: { 
 			userList: userList.map(user => responseUser(user)),
-			total: userList.length
+			total,
+			totalPage: Math.ceil(total / limit)
 		}
 	};
 }
