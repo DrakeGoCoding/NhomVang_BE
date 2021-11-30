@@ -29,7 +29,7 @@ const authenticate = async (req, res, next) => {
 			if (!user) {
 				throw new AppError(401, "fail", NOT_FOUND_USER);
 			}
-			req.user = user;
+			req.user = user.toJSON();
 			next();
 		});
 	} catch (error) {
