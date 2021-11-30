@@ -1,7 +1,6 @@
 const authService = require('@admin/services/auth.service');
 const AppError = require('@utils/appError');
 const { MISSING_AUTH_INPUT } = require('@constants/error');
-const { responseUser } = require('../../utils/responsor');
 
 const login = async (req, res, next) => {
 	try {
@@ -19,19 +18,6 @@ const login = async (req, res, next) => {
 	}
 }
 
-const getCurrentUser = async (req, res, next) => {
-	try {
-		if (!req.user) {
-			res.status(204).json({ user: null });
-		} else {
-			res.status(200).json({ user: responseUser(req.user) });
-		}
-	} catch (error) {
-		next(error);
-	}
-}
-
 module.exports = {
-	login,
-	getCurrentUser
+	login
 }

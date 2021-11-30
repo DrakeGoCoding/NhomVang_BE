@@ -7,5 +7,6 @@ router.post('/register', authController.register);
 
 router.use(authenticate);
 router.put('/update', authController.updateUser);
+router.get('/current', authController.getCurrentUser);
 
 module.exports = router;
