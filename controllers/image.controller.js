@@ -30,8 +30,6 @@ const deleteImage = async (req, res, next) => {
 	try {
 		const { id } = req.body;
 
-		console.log(id);
-
 		// check if data is provided
 		if (!id) {
 			throw new AppError(400, "fail", MISSING_IMAGE_INPUT);

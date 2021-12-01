@@ -65,7 +65,7 @@ const updateUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
 	try {
-		const { username } = req.body;
+		const { username } = req.params;
 
 		// check if username is filled
 		if (!username) {

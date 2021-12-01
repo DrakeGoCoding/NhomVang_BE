@@ -131,8 +131,10 @@ const deleteUser = async (username) => {
 	}
 
 	return {
-		statusCode: 204,
-		data: null
+		statusCode: 200,
+		data: {
+			username: user.username
+		}
 	};
 }
 

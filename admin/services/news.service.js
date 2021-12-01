@@ -49,8 +49,10 @@ const deleteNews = async (slug) => {
 	}
 
 	return {
-		statusCode: 204,
-		data: null
+		statusCode: 200,
+		data: {
+			slug: news.slug
+		}
 	};
 }
 
