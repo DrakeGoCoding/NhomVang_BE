@@ -8,7 +8,13 @@ const responseNews = news => {
 	return { ...rest, author: author.displayname };
 }
 
+const responseProduct = product => {
+	const { _id, __v, ...rest } = product;
+	return rest;
+}
+
 module.exports = {
 	responseUser,
-	responseNews
+	responseNews,
+	responseProduct
 }

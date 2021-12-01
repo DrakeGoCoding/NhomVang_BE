@@ -17,14 +17,16 @@ const getAllUsers = async (req, res, next) => {
 
 const createUser = async (req, res, next) => {
 	try {
-		const { username, password } = req.body.user;
-
-		// check if username and password are filled
+		let user = req.body.user;
+		if (!user) {
+			throw new AppError(400, "fail", MISSING_USER_INPUT);
+		}
+		const { username, password } = user;
 		if (!username || !password) {
-			throw new AppError(400, "fail", MISSING_AUTH_INPUT);
+			throw new AppError(400, "fail", MISSING_USER_INPUT);
 		}
 
-		const user = Object.assign(req.body.user, {
+		user = Object.assign(user, {
 			hash: undefined,
 			salt: undefined,
 			role: undefined,
@@ -41,14 +43,17 @@ const createUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
 	try {
-		const { username } = req.body.user;
+		let user = req.body.user;
+		if (!user) {
+			throw new AppError(400, "fail", MISSING_USER_INPUT);
+		}
 
-		// check if username is filled
+		const { username } = user;
 		if (!username) {
 			throw new AppError(400, "fail", MISSING_USER_INPUT);
 		}
 
-		const user = Object.assign(req.body.user, {
+		user = Object.assign(req.body, {
 			hash: undefined,
 			salt: undefined,
 			role: undefined,
@@ -66,8 +71,6 @@ const updateUser = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
 	try {
 		const { username } = req.params;
-
-		// check if username is filled
 		if (!username) {
 			throw new AppError(400, "fail", MISSING_USER_INPUT);
 		}

@@ -1,21 +1,22 @@
 const newsService = require('@admin/services/news.service');
 const AppError = require('@utils/appError');
-const {
-	MISSING_NEWS_INPUT,
-	UNDEFINED_ROUTE
-} = require('@constants/error');
+const { MISSING_NEWS_INPUT, UNDEFINED_ROUTE } = require('@constants/error');
 
 const createNews = async (req, res, next) => {
 	try {
 		const author = req.user._id;
-		const { title, content } = req.body.news;
 
-		// check if title and content are filled
+		let news = req.body.news;
+		if (!news) {
+			throw new AppError(400, "fail", MISSING_NEWS_INPUT);
+		}
+
+		const { title, content } = news;
 		if (!title || !content) {
 			throw new AppError(400, "fail", MISSING_NEWS_INPUT);
 		}
 
-		const news = Object.assign(req.body.news, {
+		news = Object.assign(news, {
 			author: undefined,
 			slug: undefined,
 			createdDate: undefined,
@@ -32,20 +33,23 @@ const createNews = async (req, res, next) => {
 const updateNews = async (req, res, next) => {
 	try {
 		const author = req.user._id;
+		
 		const { slug } = req.params;
-		const { title, content } = req.body.news;
-
-		// check if slug are filled
 		if (!slug) {
 			throw new AppError(400, "fail", UNDEFINED_ROUTE);
 		}
+		
+		let news = req.body.news;
+		if (!news) {
+			throw new AppError(400, "fail", MISSING_NEWS_INPUT);
+		}
 
-		// check if title and content are filled
+		const { title, content } = news;
 		if (!title || !content) {
 			throw new AppError(400, "fail", MISSING_NEWS_INPUT);
 		}
 
-		const news = Object.assign(req.body.news, {
+		news = Object.assign(news, {
 			author: undefined,
 			slug: undefined,
 			createdDate: undefined,
