@@ -26,6 +26,25 @@ const upload = async (req, res, next) => {
 	}
 }
 
+const deleteImage = async (req, res, next) => {
+	try {
+		const { id } = req.body;
+
+		console.log(id);
+
+		// check if data is provided
+		if (!id) {
+			throw new AppError(400, "fail", MISSING_IMAGE_INPUT);
+		}
+
+		const { statusCode, data } = await deleteImage(id);
+		res.status(statusCode).json(data);
+	} catch (error) {
+		next(error);
+	}
+}
+
 module.exports = {
-	upload
+	upload,
+	deleteImage
 }

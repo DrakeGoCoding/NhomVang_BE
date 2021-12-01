@@ -33,15 +33,15 @@ const updateNews = async (req, res, next) => {
 	try {
 		const author = req.user._id;
 		const { slug } = req.params;
-		const { title, body } = req.body.news;
+		const { title, content } = req.body.news;
 
 		// check if slug are filled
 		if (!slug) {
 			throw new AppError(400, "fail", UNDEFINED_ROUTE);
 		}
 
-		// check if title and body are filled
-		if (!title.trim().length || !body.trim().length) {
+		// check if title and content are filled
+		if (!title || !content) {
 			throw new AppError(400, "fail", MISSING_NEWS_INPUT);
 		}
 

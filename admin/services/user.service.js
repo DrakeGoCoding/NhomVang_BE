@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
-const User = require('@models/user');
+// const User = require('@models/user');
+const User = require('../../models/user');
 const { responseUser } = require('@utils/responsor');
 const AppError = require('@utils/appError');
 const { NOT_FOUND_USER, FOUND_USER } = require('@constants/error');
@@ -17,10 +18,25 @@ const { NOT_FOUND_USER, FOUND_USER } = require('@constants/error');
  * @param {Number} offset
  * @DrakeGoCoding 11/22/2021
  */
-const getAllUsers = async (filter = {}, limit = 20, offset = 0) => {
+const getAllUsers = async (filter = {}, limit = 10, offset = 0) => {
+	const { role, regex } = filter;
+	const roleRegex = new RegExp(role, "i");
+	const globalRegex = new RegExp(regex, "i");
 	const query = User
 		.collection
-		.find(filter)
+		.find({
+			$and: [
+				{ role: { $regex: roleRegex } },
+				{
+					$or: [
+						{ username: { $regex: globalRegex } },
+						{ displayname: { $regex: globalRegex } },
+						{ email: { $regex: globalRegex } },
+						{ phonenumber: { $regex: globalRegex } }
+					]
+				}
+			]
+		})
 		.sort({ modifiedDate: -1 });
 
 	const total = await query.count();
@@ -28,7 +44,7 @@ const getAllUsers = async (filter = {}, limit = 20, offset = 0) => {
 
 	if (!total || !userList || userList.length === 0) {
 		return {
-			statusCode: 204,
+			statusCode: 200,
 			data: {
 				userList: [],
 				total: 0
@@ -38,7 +54,7 @@ const getAllUsers = async (filter = {}, limit = 20, offset = 0) => {
 
 	return {
 		statusCode: 200,
-		data: { 
+		data: {
 			userList: userList.map(user => responseUser(user)),
 			total
 		}
@@ -47,13 +63,12 @@ const getAllUsers = async (filter = {}, limit = 20, offset = 0) => {
 
 /**
  * Create a new admin user
- * @param {String} username 
- * @param {String} password 
+ * @param {User} user
  * @DrakeGoCoding 11/22/2021
  */
-const createUser = async (username, password) => {
+const createUser = async (user) => {
 	// check if username is registered
-	const foundUser = await User.findOne({ username });
+	const foundUser = await User.findOne({ username: user.username });
 	if (foundUser) {
 		throw new AppError(400, "fail", FOUND_USER)
 	}
@@ -61,15 +76,15 @@ const createUser = async (username, password) => {
 	// generate salt then hash password
 	const saltRounds = Number.parseInt(process.env.SALT_ROUNDS);
 	const salt = bcrypt.genSaltSync(saltRounds);
-	const hash = bcrypt.hashSync(password, salt);
+	const hash = bcrypt.hashSync(user.password, salt);
 
 	// save user
-	const user = new User({ username, hash, salt, role: "admin" });
-	await user.save();
+	const newUser = new User({ ...user, hash, salt, role: "admin" });
+	await newUser.save();
 
 	return {
 		statusCode: 201,
-		data: { user: responseUser(user.toJSON()) }
+		data: { user: responseUser(newUser.toJSON()) }
 	};
 }
 

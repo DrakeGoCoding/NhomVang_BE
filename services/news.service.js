@@ -3,7 +3,7 @@ const AppError = require('@utils/appError');
 const { responseNews } = require('@utils/responsor');
 const { NOT_FOUND_NEWS } = require('@constants/error');
 
-const getAllNews = async (limit = 7, offset = 0) => {
+const getAllNews = async (limit = 10, offset = 0) => {
 	const query = News
 		.collection
 		.find()
@@ -14,7 +14,7 @@ const getAllNews = async (limit = 7, offset = 0) => {
 
 	if (!total || !newsList || newsList.length === 0) {
 		return {
-			statusCode: 204,
+			statusCode: 200,
 			data: {
 				newsList: [],
 				total

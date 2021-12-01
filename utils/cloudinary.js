@@ -19,7 +19,10 @@ const uploadImage = async (file, folder = "") => {
 		);
 		return {
 			statusCode: 201,
-			data: result.url
+			data: {
+				url: result.url,
+				id: result.public_id
+			}
 		};
 	} catch (error) {
 		console.error(error);
