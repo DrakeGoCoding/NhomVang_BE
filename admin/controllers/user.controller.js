@@ -24,7 +24,15 @@ const createUser = async (req, res, next) => {
 			throw new AppError(400, "fail", MISSING_AUTH_INPUT);
 		}
 
-		const { statusCode, data } = await userService.createUser(username, password);
+		const user = Object.assign(req.body.user, {
+			hash: undefined,
+			salt: undefined,
+			role: undefined,
+			createdDate: undefined,
+			modifiedDate: Date.now(),
+		});
+
+		const { statusCode, data } = await userService.createUser(user);
 		res.status(statusCode).json(data);
 	} catch (error) {
 		next(error);
@@ -57,7 +65,7 @@ const updateUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
 	try {
-		const { username } = req.body;
+		const { username } = req.params;
 
 		// check if username is filled
 		if (!username) {
