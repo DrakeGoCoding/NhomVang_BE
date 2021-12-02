@@ -1,12 +1,16 @@
 const mongoose = require('mongoose');
+const slug = require('mongoose-slug-updater');
+mongoose.plugin(slug);
 
 const productSchema = mongoose.Schema({
-	name: { type: String, required: true },
+	name: { type: String, required: true, unique: true },
 	listedPrice: { type: Number, required: true },
 	discountPrice: { type: Number },
+	supplier: { type: String, required: true },
+	slug: { type: String, slug: ["name"], unique: true },
 	isHot: { type: Boolean, default: false },
 	isInSlider: { type: Boolean, default: false },
-	thumbnail: { type: String },
+	thumbnail: { type: String, required: true },
 	photos: {
 		type: [{
 			type: String
@@ -19,7 +23,6 @@ const productSchema = mongoose.Schema({
 			type: String
 		}]
 	},
-	supplier: { type: String, required: true },
 	createdDate: { type: Date, default: Date.now, immutable: true },
 	modifiedDate: { type: Date, default: Date.now },
 });

@@ -1,13 +1,16 @@
 const authService = require('@services/auth.service');
 const AppError = require('@utils/appError');
-const { MISSING_AUTH_INPUT } = require('@constants/error');
+const { MISSING_AUTH_INPUT, MISSING_USER_INPUT } = require('@constants/error');
 const { responseUser } = require('@utils/responsor');
 
 const login = async (req, res, next) => {
 	try {
-		const { username, password } = req.body.user;
+		const user = req.body.user;
+		if (!user) {
+			throw new AppError(400, "fail", MISSING_AUTH_INPUT);
+		}
 
-		// check if username and password are filled
+		const { username, password } = user;
 		if (!username || !password) {
 			throw new AppError(400, "fail", MISSING_AUTH_INPUT);
 		}
@@ -21,11 +24,14 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
 	try {
-		const { username, password } = req.body.user;
+		const user = req.body.user;
+		if (!user) {
+			throw new AppError(400, "fail", MISSING_USER_INPUT);
+		}
 
-		// check if username and password are filled
+		const { username, password } = user;
 		if (!username || !password) {
-			throw new AppError(400, "fail", MISSING_AUTH_INPUT);
+			throw new AppError(400, "fail", MISSING_USER_INPUT);
 		}
 
 		const { statusCode, data } = await authService.register(username, password);
@@ -37,19 +43,16 @@ const register = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
 	try {
-		const { username } = req.body.user;
-
-		// check if username is filled
-		if (!username) {
+		let user = req.body.user;
+		if (!user || !user.username) {
 			throw new AppError(400, "fail", MISSING_USER_INPUT);
 		}
 
-		// check if user is allowed to update account
-		if (username !== req.user.username) {
+		if (user.username !== req.user.username) {
 			throw new AppError(403, "fail", FORBIDDEN);
 		}
 
-		const user = Object.assign(req.body.user, {
+		user = Object.assign(user, {
 			hash: undefined,
 			salt: undefined,
 			role: undefined,

@@ -1,13 +1,9 @@
 const newsService = require('@services/news.service');
-const AppError = require('@utils/appError');
 const { UNDEFINED_ROUTE } = require('@constants/error');
 
 const getAllNews = async (req, res, next) => {
 	try {
-		let { limit, offset } = req.query;
-		limit = parseInt(limit) || undefined;
-		offset = parseInt(offset) || undefined;
-
+		const { limit, offset } = req.query;
 		const { statusCode, data } = await newsService.getAllNews(limit, offset);
 		res.status(statusCode).json(data);
 	} catch (error) {
@@ -17,9 +13,7 @@ const getAllNews = async (req, res, next) => {
 
 const getNews = async (req, res, next) => {
 	try {
-		const { slug } = req.params;
-
-		// check if slug are filled
+		const slug = req.params.slug;
 		if (!slug) {
 			throw new AppError(400, "fail", UNDEFINED_ROUTE);
 		}

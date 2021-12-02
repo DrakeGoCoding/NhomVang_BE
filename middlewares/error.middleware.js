@@ -5,11 +5,16 @@ const handleGlobalError = (err, req, res, next) => {
 	err.status = err.status || 'error';
 	err.message = err.message || SYSTEM_ERROR;
 
-	res.status(err.statusCode).json({
-		status: err.status,
-		message: err.message,
-		stack: err.stack
-	});
+	const data = Object.assign(
+		{},
+		{
+			status: err.status,
+			message: err.message
+		},
+		process.env.NODE_ENV === "production" ? {} : { stack: err.stack }
+	);
+
+	res.status(err.statusCode).json(data);
 }
 
 module.exports = {

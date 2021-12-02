@@ -14,6 +14,6 @@ admin.use(restrictTo("admin"));
 
 admin.use('/news', newsRoute);
 admin.use('/users', userRoute);
-admin.use('/product', productRoute);
+admin.use('/products', productRoute);
 
 module.exports = admin;
