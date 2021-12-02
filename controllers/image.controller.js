@@ -33,7 +33,6 @@ const deleteImage = async (req, res, next) => {
 		const { statusCode, data } = await cloudinary.deleteImage(id);
 		res.status(statusCode).json(data);
 	} catch (error) {
-		console.log(error);
 		next(error);
 	}
 }

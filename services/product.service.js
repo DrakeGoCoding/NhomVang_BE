@@ -22,7 +22,6 @@ const getAllProducts = async (
 	limit = 10,
 	offset = 0
 ) => {
-	console.log(filter);
 	const query = {
 		$and: [
 			{ name: { $regex: new RegExp(filter.name || "", "i") } },
