@@ -14,9 +14,9 @@ module.exports = {
 	MISSING_NEWS_INPUT: "Please provide all required fields for news.",
 	MISSING_PRODUCT_INPUT: "Please provide all required fields for product",
 	MISSING_USER_INPUT: "Please provide all required fields for user.",
-	NOT_FOUND_NEWS: "News not found.",
-	NOT_FOUND_PRODUCT: "Product not found",
-	NOT_FOUND_USER: "User not found.",
+	NOT_FOUND_NEWS: "News does not exist.",
+	NOT_FOUND_PRODUCT: "Product does not exist.",
+	NOT_FOUND_USER: "User does not exist.",
 	SYSTEM_ERROR: "System error. Please contact us for support.",
 	UNDEFINED_ROUTE: "Undefined route.",
 	WRONG_AUTH_INPUT: "Incorrect email or password."

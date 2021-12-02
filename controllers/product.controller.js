@@ -1,12 +1,8 @@
 const productService = require('@services/product.service');
-const AppError = require('@utils/appError');
 
 const getAllProducts = async (req, res, next) => {
 	try {
-		let { limit, offset, ...filter } = req.query;
-		limit = parseInt(limit) || undefined;
-		offset = parseInt(offset) || undefined;
-
+		const { limit, offset, ...filter } = req.query;
 		const {statusCode, data } = await productService.getAllProducts(filter, limit, offset);
 		res.status(statusCode).json(data);
 	} catch (error) {
@@ -20,7 +16,7 @@ const getProduct = async (req, res, next) => {
 		if (!slug) {
 			throw new AppError(400, "fail", UNDEFINED_ROUTE);
 		}
-
+		
 		const { statusCode, data } = await productService.getProduct(slug);
 		res.status(statusCode).json(data);
 	} catch (error) {

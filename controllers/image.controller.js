@@ -28,9 +28,7 @@ const upload = async (req, res, next) => {
 
 const deleteImage = async (req, res, next) => {
 	try {
-		const { id } = req.body;
-
-		// check if data is provided
+		const { id } = req.params;
 		if (!id) {
 			throw new AppError(400, "fail", MISSING_IMAGE_INPUT);
 		}

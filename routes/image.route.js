@@ -5,6 +5,6 @@ const { authenticate } = require('@middlewares/auth.middleware');
 router.use(authenticate);
 
 router.post('/upload', imageController.upload);
-router.delete('/', imageController.deleteImage);
+router.delete('/:id', imageController.deleteImage);
 
 module.exports = router;
