@@ -20,7 +20,7 @@ const createProduct = async (req, res, next) => {
 			modifiedDate: Date.now()
 		});
 
-		const { statusCode, data } = await productService.createProduct(slug, product);
+		const { statusCode, data } = await productService.createProduct(product);
 		res.status(statusCode).json(data);
 	} catch (error) {
 		next(error);
