@@ -58,7 +58,7 @@ const updateUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
 	try {
-		const { username } = req.params;
+		const { username } = req.query;
 		if (!username) {
 			throw new AppError(400, "fail", MISSING_USER_INPUT);
 		}
