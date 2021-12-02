@@ -1,13 +1,10 @@
 const userService = require('@admin/services/user.service');
 const AppError = require('@utils/appError');
-const { MISSING_AUTH_INPUT, MISSING_USER_INPUT } = require('@constants/error');
+const { MISSING_USER_INPUT } = require('@constants/error');
 
 const getAllUsers = async (req, res, next) => {
 	try {
-		let { limit, offset, ...filter } = req.query;
-		limit = parseInt(limit) || undefined;
-		offset = parseInt(offset) || undefined;
-
+		const { limit, offset, ...filter } = req.query;
 		const { statusCode, data } = await userService.getAllUsers(filter, limit, offset);
 		res.status(statusCode).json(data);
 	} catch (error) {
@@ -18,11 +15,7 @@ const getAllUsers = async (req, res, next) => {
 const createUser = async (req, res, next) => {
 	try {
 		let user = req.body.user;
-		if (!user) {
-			throw new AppError(400, "fail", MISSING_USER_INPUT);
-		}
-		const { username, password } = user;
-		if (!username || !password) {
+		if (!user || !user.username || !user.password) {
 			throw new AppError(400, "fail", MISSING_USER_INPUT);
 		}
 
@@ -44,12 +37,7 @@ const createUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
 	try {
 		let user = req.body.user;
-		if (!user) {
-			throw new AppError(400, "fail", MISSING_USER_INPUT);
-		}
-
-		const { username } = user;
-		if (!username) {
+		if (!user || !user.username) {
 			throw new AppError(400, "fail", MISSING_USER_INPUT);
 		}
 

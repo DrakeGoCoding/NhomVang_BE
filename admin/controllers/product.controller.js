@@ -59,9 +59,7 @@ const updateProduct = async (req, res, next) => {
 
 const deleteProduct = async (req, res, next) => {
 	try {
-		const { slug } = req.params;
-
-		// check if slug are filled
+		const slug = req.params.slug;
 		if (!slug) {
 			throw new AppError(400, "fail", UNDEFINED_ROUTE);
 		}

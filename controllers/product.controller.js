@@ -12,7 +12,7 @@ const getAllProducts = async (req, res, next) => {
 
 const getProduct = async (req, res, next) => {
 	try {
-		const { slug } = req.params;
+		const slug = req.params.slug;
 		if (!slug) {
 			throw new AppError(400, "fail", UNDEFINED_ROUTE);
 		}

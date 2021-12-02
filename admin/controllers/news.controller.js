@@ -33,12 +33,12 @@ const createNews = async (req, res, next) => {
 const updateNews = async (req, res, next) => {
 	try {
 		const author = req.user._id;
-		
-		const { slug } = req.params;
+
+		const slug = req.params.slug;
 		if (!slug) {
 			throw new AppError(400, "fail", UNDEFINED_ROUTE);
 		}
-		
+
 		let news = req.body.news;
 		if (!news) {
 			throw new AppError(400, "fail", MISSING_NEWS_INPUT);
@@ -65,9 +65,7 @@ const updateNews = async (req, res, next) => {
 
 const deleteNews = async (req, res, next) => {
 	try {
-		const { slug } = req.params;
-
-		// check if slug are filled
+		const slug = req.params.slug;
 		if (!slug) {
 			throw new AppError(400, "fail", UNDEFINED_ROUTE);
 		}

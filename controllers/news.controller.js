@@ -13,7 +13,7 @@ const getAllNews = async (req, res, next) => {
 
 const getNews = async (req, res, next) => {
 	try {
-		const { slug } = req.params;
+		const slug = req.params.slug;
 		if (!slug) {
 			throw new AppError(400, "fail", UNDEFINED_ROUTE);
 		}

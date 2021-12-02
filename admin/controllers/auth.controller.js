@@ -4,9 +4,12 @@ const { MISSING_AUTH_INPUT } = require('@constants/error');
 
 const login = async (req, res, next) => {
 	try {
-		const { username, password } = req.body.user;
-
-		// check if username and password are filled
+		const user = req.body.user;
+		if (!user) {
+			throw new AppError(400, "fail", MISSING_AUTH_INPUT);
+		}
+		
+		const { username, password } = user;
 		if (!username || !password) {
 			throw new AppError(400, "fail", MISSING_AUTH_INPUT);
 		}
