@@ -19,8 +19,8 @@ const { NOT_FOUND_USER, FOUND_USER } = require('@constants/error');
  */
 const getAllUsers = async (filter = {}, limit = 10, offset = 0) => {
 	const { role, regex } = filter;
-	const roleRegex = new RegExp(role, "i");
-	const globalRegex = new RegExp(regex, "i");
+	const roleRegex = new RegExp(role || "", "i");
+	const globalRegex = new RegExp(regex || "", "i");
 	const query = User
 		.collection
 		.find({

@@ -25,8 +25,8 @@ const getAllProducts = async (
 	console.log(filter);
 	const query = {
 		$and: [
-			{ name: { $regex: new RegExp(filter.name, "i") } },
-			{ supplier: { $regex: new RegExp(filter.supplier, "i") } },
+			{ name: { $regex: new RegExp(filter.name || "", "i") } },
+			{ supplier: { $regex: new RegExp(filter.supplier || "", "i") } },
 			{
 				$or: [
 					{ discountPrice: { $exists: true, $gte: filter.minPrice, $lte: filter.maxPrice } },
