@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const User = require('@models/user');
 const { responseUser } = require('@utils/responsor');
 const AppError = require('@utils/appError');
-const { NOT_FOUND_USER, FOUND_USER } = require('@constants/error');
+const { NOT_FOUND_USER, FOUND_USER, FORBIDDEN } = require('@constants/error');
 
 /**
  * Get all users data
@@ -124,6 +124,10 @@ const updateUser = async (user) => {
  * @DrakeGoCoding 11/22/2021
  */
 const deleteUser = async (username) => {
+	if (username === "admin") {
+		throw new AppError(403, "fail", FORBIDDEN);
+	}
+
 	const user = await User.findOneAndDelete({ username }, { new: true });
 	if (!user) {
 		throw new AppError(404, "fail", NOT_FOUND_USER);
