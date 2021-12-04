@@ -10,8 +10,8 @@ const newsSchema = mongoose.Schema({
 		required: true
 	},
 	content: { type: String, required: true },
-	thumbnail: { type: String },
-	description: { type: String },
+	thumbnail: { type: String, default: "" },
+	description: { type: String, default: "" },
 	slug: { type: String, slug: ["title"], unique: true },
 	createdDate: { type: Date, default: Date.now, immutable: true },
 	modifiedDate: { type: Date, default: Date.now },
