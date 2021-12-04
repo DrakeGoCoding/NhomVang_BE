@@ -15,13 +15,15 @@ const productSchema = mongoose.Schema({
 		type: [{
 			type: String
 		}],
+		default: []
 	},
 	quantity: { type: Number, default: 0 },
-	description: { type: String },
+	description: { type: String, default: "" },
 	tags: {
 		type: [{
 			type: String
-		}]
+		}],
+		default: []
 	},
 	createdDate: { type: Date, default: Date.now, immutable: true },
 	modifiedDate: { type: Date, default: Date.now },
