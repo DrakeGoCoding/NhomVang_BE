@@ -5,7 +5,7 @@ mongoose.plugin(slug);
 const productSchema = mongoose.Schema({
 	name: { type: String, required: true, unique: true },
 	listedPrice: { type: Number, required: true },
-	discountPrice: { type: Number },
+	discountPrice: { type: Number, default: 0 },
 	supplier: { type: String, required: true },
 	slug: { type: String, slug: ["name"], unique: true },
 	isHot: { type: Boolean, default: false },
