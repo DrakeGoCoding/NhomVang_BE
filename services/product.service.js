@@ -39,10 +39,10 @@ const getAllProducts = async (
 			}
 		]
 	};
-	if (typeof filter.hot === 'boolean') {
+	if (typeof filter.hot === 'boolean' && filter.hot) {
 		query.$and.push({ isHot: filter.hot });
 	}
-	if (typeof filter.inSlider === 'boolean') {
+	if (typeof filter.inSlider === 'boolean' && filter.inSlider) {
 		query.$and.push({ isInSlider: filter.inSlider });
 	}
 
