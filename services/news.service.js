@@ -6,27 +6,47 @@ const { NOT_FOUND_NEWS } = require('@constants/error');
 const getAllNews = async (limit = 10, offset = 0) => {
 	const query = News
 		.collection
-		.find()
-		.sort({ modifiedDate: -1 });
-	
-	const total = await query.count();
-	const newsList = await query.skip(offset).limit(limit).toArray();
+		.aggregate([
+			{ $sort: { modifiedDate: -1 } },
+			{
+				$lookup: {
+					from: "users",
+					localField: "author",
+					foreignField: "_id",
+					as: "author"
+				}
+			},
+			{
+				$facet: {
+					"stage1": [{ $group: { _id: null, count: { $sum: 1 } } }],
+					"stage2": [
+						{ $skip: offset },
+						{ $limit: limit },
+						{
+							$project: {
+								author: { $arrayElemAt: ["$author", 0], },
+								title: 1,
+								content: 1,
+								thumbnail: 1,
+								description: 1,
+								slug: 1,
+								createdDate: 1,
+								modifiedDate: 1
+							}
+						}
+					]
+				}
+			},
+			{ $unwind: "$stage1" },
+			{ $project: { total: "$stage1.count", newsList: "$stage2" } }
+		]);
 
-	if (!total || !newsList || newsList.length === 0) {
-		return {
-			statusCode: 200,
-			data: {
-				newsList: [],
-				total
-			}
-		};
-	}
-
+	const data = (await query.toArray())[0];
 	return {
 		statusCode: 200,
-		data: { 
-			newsList: newsList.map(news => responseNews(news)),
-			total
+		data: {
+			...data,
+			newsList: data ? data.newsList.map(news => responseNews(news)) : []
 		}
 	};
 }
