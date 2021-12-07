@@ -28,10 +28,16 @@ const getAllProducts = async (
 			{ supplier: { $regex: new RegExp(filter.supplier || "", "i") } },
 			{
 				$or: [
-					{ discountPrice: { $exists: true, $gte: filter.minPrice, $lte: filter.maxPrice } },
+					{
+						discountPrice: {
+							$ne: 0,
+							$gte: filter.minPrice,
+							$lte: filter.maxPrice
+						}
+					},
 					{
 						$and: [
-							{ discountPrice: { $exists: false } },
+							{ discountPrice: { $eq: 0 } },
 							{ listedPrice: { $gte: filter.minPrice, $lte: filter.maxPrice } },
 						]
 					}
