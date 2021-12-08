@@ -29,16 +29,15 @@ const getAllProducts = async (
 			{
 				$or: [
 					{
-						discountPrice: {
-							$ne: 0,
-							$gte: filter.minPrice,
-							$lte: filter.maxPrice
-						}
+						$and: [
+							{ discountPrice: { $ne: 0 } },
+							{ discountPrice: { $gte: filter.minPrice, $lte: filter.maxPrice } }
+						],
 					},
 					{
 						$and: [
 							{ discountPrice: { $eq: 0 } },
-							{ listedPrice: { $gte: filter.minPrice, $lte: filter.maxPrice } },
+							{ listedPrice: { $gte: filter.minPrice, $lte: filter.maxPrice } }
 						]
 					}
 				]
