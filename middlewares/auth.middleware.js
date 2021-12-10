@@ -9,32 +9,31 @@ const {
 } = require("@constants/error");
 
 const authenticate = async (req, res, next) => {
-	try {
-		// check if token exists
-		let token;
-		if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
-			token = req.headers.authorization.split(" ")[1];
-		}
-		if (!token) {
-			throw new AppError(401, "fail", LOGIN_REQUIRED);
-		}
-
-		// verify token
-		jwt.verify(token, process.env.JWT_SECRET, async (err, payload) => {
-			if (err) {
-				throw new AppError(401, "fail", INVALID_TOKEN);
-			}
-			// check if user exists
-			const user = await User.findById(payload.id).exec();
-			if (!user) {
-				throw new AppError(401, "fail", NOT_FOUND_USER);
-			}
-			req.user = user.toJSON();
-			next();
-		});
-	} catch (error) {
-		next(error);
+	// check if token exists
+	let token;
+	if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+		token = req.headers.authorization.split(" ")[1];
 	}
+	if (!token) {
+		next(new AppError(401, "fail", LOGIN_REQUIRED));
+		return;
+	}
+
+	// verify token
+	jwt.verify(token, process.env.JWT_SECRET, async (err, payload) => {
+		if (err) {
+			next(new AppError(401, "fail", INVALID_TOKEN));
+			return;
+		} 
+		// check if user exists
+		const user = await User.findById(payload.id).exec();
+		if (!user) {
+			next(new AppError(401, "fail", NOT_FOUND_USER));
+			return
+		} 
+		req.user = user.toJSON();
+		next();
+	});
 }
 
 const restrictTo = (...roles) => {
