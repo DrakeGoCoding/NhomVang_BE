@@ -5,6 +5,7 @@ const { authenticate, restrictTo } = require("@middlewares/auth.middleware");
 router.use(authenticate);
 router.use(restrictTo("user"));
 
+router.get("/", cartController.getCart);
 router.post("/add", cartController.addItem);
 router.post("/update", cartController.updateItem);
 router.post("/remove", cartController.removeItem);
