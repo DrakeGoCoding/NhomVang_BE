@@ -7,5 +7,6 @@ router.use(restrictTo("user"));
 
 router.post("/add", cartController.addItem);
 router.post("/update", cartController.updateItem);
+router.post("/remove", cartController.removeItem);
 
 module.exports = router;

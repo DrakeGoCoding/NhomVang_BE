@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const slug = require("mongoose-slug-updater");
 mongoose.plugin(slug);
 
-const newsSchema = mongoose.Schema({
+const newsSchema = new mongoose.Schema({
     title: { type: String, required: true },
     author: {
         type: mongoose.Schema.Types.ObjectId,

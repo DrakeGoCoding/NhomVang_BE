@@ -1,21 +1,29 @@
 const responseUser = user => {
-    const { _id, __v, hash, salt, ...rest } = user;
+    const { __v, hash, salt, ...rest } = user;
     return rest;
 };
 
 const responseNews = news => {
-    const { _id, __v, author, ...rest } = news;
-    return { ...rest, author: author.displayname };
+    const { __v, author, ...rest } = news;
+    return { author: author.displayname, ...rest };
 };
 
 const responseProduct = product => {
-    const { _id, __v, ...rest } = product;
+    const { __v, ...rest } = product;
     return rest;
 };
 
 const responseCart = cart => {
-    const { _id, __v, user, ...rest } = cart;
-    return rest;
+    const { id, __v, user, items, ...rest } = cart;
+    let total = 0;
+    let discountTotal = 0;
+    const responseItem = items.map(item => {
+        const { id, quantity } = item;
+        total += id.listedPrice * quantity;
+        discountTotal += (id.discountPrice || id.listedPrice) * quantity;
+        return { quantity, ...responseProduct(id) };
+    });
+    return { items: responseItem, total, discountTotal, ...rest };
 };
 
 module.exports = {
