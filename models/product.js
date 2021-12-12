@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const slug = require("mongoose-slug-updater");
 mongoose.plugin(slug);
 
-const productSchema = mongoose.Schema({
+const productSchema = new mongoose.Schema({
     name: { type: String, required: true, unique: true },
     listedPrice: { type: Number, required: true },
     discountPrice: { type: Number, default: 0 },
@@ -19,7 +19,7 @@ const productSchema = mongoose.Schema({
         ],
         default: []
     },
-    quantity: { type: Number, default: 0 },
+    inStock: { type: Number, default: 0 },
     description: { type: String, default: "" },
     tags: {
         type: [

@@ -13,6 +13,7 @@ const authRoute = require("@routes/auth.route");
 const newsRoute = require("@routes/news.route");
 const imageRoute = require("@routes/image.route");
 const productRoute = require("@routes/product.route");
+const cartRoute = require("@routes/cart.route");
 const { handleGlobalError } = require("@middlewares/error.middleware");
 const AppError = require("@utils/appError");
 const { UNDEFINED_ROUTE } = require("@constants/error");
@@ -52,6 +53,7 @@ app.use("/auth", authRoute);
 app.use("/news", newsRoute);
 app.use("/image", imageRoute);
 app.use("/products", productRoute);
+app.use("/cart", cartRoute);
 
 app.use("*", (req, res, next) => {
     const err = new AppError(404, "fail", UNDEFINED_ROUTE);
