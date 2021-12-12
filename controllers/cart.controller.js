@@ -2,6 +2,16 @@ const cartService = require("@services/cart.service");
 const AppError = require("@utils/appError");
 const { INVALID_CART_ITEM_QUANTITY, MISSING_CART_ITEM_ID, MISSING_CART_ITEM_QUANTITY } = require("@constants/error");
 
+const getCart = async (req, res, next) => {
+    try {
+        const userId = req.user._id;
+        const { statusCode, data } = await cartService.getCart(userId);
+        res.status(statusCode).json(data);
+    } catch (error) {
+        next(error);
+    }
+};
+
 const addItem = async (req, res, next) => {
     try {
         const userId = req.user._id;
@@ -67,6 +77,7 @@ const updateItem = async (req, res, next) => {
 };
 
 module.exports = {
+    getCart,
     addItem,
     removeItem,
     updateItem

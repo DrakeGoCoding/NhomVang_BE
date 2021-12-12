@@ -1,7 +1,28 @@
 const Cart = require("@models/cart");
 const Product = require("@models/product");
 const AppError = require("@utils/appError");
+const { responseCart } = require("@utils/responsor");
 const { NOT_FOUND_CART, NOT_FOUND_PRODUCT } = require("@constants/error");
+
+/**
+ * Get cart data by user id
+ * @param {String} userId
+ * @DrakeGoCoding 12/12/2021
+ */
+const getCart = async userId => {
+    const cart = await Cart.findOne({ user: userId }).populate({
+        path: "items.id",
+        select: "name supplier slug thumbnail listedPrice discountPrice inStock"
+    });
+    if (!cart) {
+        throw new AppError(404, "fail", NOT_FOUND_CART);
+    }
+
+    return {
+        statusCode: 200,
+        data: { cart: responseCart(cart.toJSON()) }
+    };
+};
 
 /**
  * Add an item to cart
@@ -59,6 +80,7 @@ const updateItem = async (userId, itemId, quantity) => {
 };
 
 module.exports = {
+    getCart,
     addItem,
     removeItem,
     updateItem
