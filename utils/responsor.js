@@ -14,21 +14,23 @@ const responseProduct = product => {
 };
 
 const responseCart = cart => {
-    const { id, __v, user, items, ...rest } = cart;
-    let total = 0;
-    let discountTotal = 0;
+    const { __v, user, items, ...rest } = cart;
     const responseItem = items.map(item => {
-        const { id, quantity } = item;
-        total += id.listedPrice * quantity;
-        discountTotal += (id.discountPrice || id.listedPrice) * quantity;
-        return { quantity, ...responseProduct(id) };
+        const { _id, quantity } = item;
+        return { quantity, ...responseProduct(_id) };
     });
-    return { items: responseItem, total, discountTotal, ...rest };
+    return { items: responseItem, ...rest };
+};
+
+const responseInvoice = invoice => {
+    const { __v, ...rest } = invoice;
+    return rest;
 };
 
 module.exports = {
     responseUser,
     responseNews,
     responseProduct,
-    responseCart
+    responseCart,
+    responseInvoice
 };

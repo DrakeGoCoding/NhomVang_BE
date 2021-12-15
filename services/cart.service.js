@@ -11,7 +11,7 @@ const { NOT_FOUND_CART, NOT_FOUND_PRODUCT } = require("@constants/error");
  */
 const getCart = async userId => {
     const cart = await Cart.findOne({ user: userId }).populate({
-        path: "items.id",
+        path: "items._id",
         select: "name supplier slug thumbnail listedPrice discountPrice inStock"
     });
     if (!cart) {
