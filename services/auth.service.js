@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
-const User = require('@models/user');
-const Cart = require('@models/cart');
+const User = require("@models/user");
+const Cart = require("@models/cart");
 const { generateToken } = require("@utils/token");
 const { responseUser, responseCart } = require("@utils/responsor");
 const AppError = require("@utils/appError");

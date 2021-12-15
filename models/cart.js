@@ -10,8 +10,7 @@ const cartSchema = new mongoose.Schema({
     items: {
         type: [
             {
-                _id: false,
-                id: {
+                _id: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "Product",
                     required: true
@@ -26,11 +25,11 @@ const cartSchema = new mongoose.Schema({
 cartSchema.methods.addItem = async function (product, quantity = 1) {
     const updatedItems = [...this.items];
     const itemIndex = updatedItems.findIndex(item => {
-        return product._id.toString() === item.id.toString();
+        return product._id.toString() === item._id.toString();
     });
 
     if (itemIndex < 0) {
-        updatedItems.push({ id: product._id, quantity });
+        updatedItems.push({ _id: product._id, quantity });
     } else {
         updatedItems[itemIndex].quantity += quantity;
     }
@@ -38,7 +37,7 @@ cartSchema.methods.addItem = async function (product, quantity = 1) {
     this.items = updatedItems;
     let updatedCart = await this.save();
     updatedCart = await this.populate({
-        path: "items.id",
+        path: "items._id",
         select: "name supplier slug thumbnail listedPrice discountPrice inStock"
     });
     return { cart: responseCart(updatedCart.toJSON()) };
@@ -46,13 +45,13 @@ cartSchema.methods.addItem = async function (product, quantity = 1) {
 
 cartSchema.methods.removeItem = async function (itemId) {
     const updatedItems = this.items.filter(item => {
-        return itemId !== item.id.toString();
+        return itemId !== item._id.toString();
     });
 
     this.items = updatedItems;
     let updatedCart = await this.save();
     updatedCart = await this.populate({
-        path: "items.id",
+        path: "items._id",
         select: "name supplier slug thumbnail listedPrice discountPrice inStock"
     });
     return { cart: responseCart(updatedCart.toJSON()) };
@@ -61,7 +60,7 @@ cartSchema.methods.removeItem = async function (itemId) {
 cartSchema.methods.updateItem = async function (itemId, quantity) {
     const updatedItems = [...this.items];
     const itemIndex = updatedItems.findIndex(item => {
-        return itemId === item.id.toString();
+        return itemId === item._id.toString();
     });
 
     if (itemIndex >= 0) {
@@ -71,7 +70,7 @@ cartSchema.methods.updateItem = async function (itemId, quantity) {
     this.items = updatedItems;
     let updatedCart = await this.save();
     updatedCart = await this.populate({
-        path: "items.id",
+        path: "items._id",
         select: "name supplier slug thumbnail listedPrice discountPrice inStock"
     });
     return { cart: responseCart(updatedCart.toJSON()) };
