@@ -14,6 +14,7 @@ const newsRoute = require("@routes/news.route");
 const imageRoute = require("@routes/image.route");
 const productRoute = require("@routes/product.route");
 const cartRoute = require("@routes/cart.route");
+const invoiceRoute = require("@routes/invoice.route");
 const { handleGlobalError } = require("@middlewares/error.middleware");
 const AppError = require("@utils/appError");
 const { UNDEFINED_ROUTE } = require("@constants/error");
@@ -41,12 +42,7 @@ const accessLogStream = rfs.createStream("access.log", {
     path: path.join(__dirname, "loggers")
 });
 morgan.token("body", req => JSON.stringify(req.body));
-app.use(
-    morgan(
-        ':remote-addr - :remote-user [:date[clf]] ":method :url :body HTTP/:http-version :status :res[content-length]" ":referrer" ":user-agent"',
-        { stream: accessLogStream }
-    )
-);
+app.use(morgan("dev", { stream: accessLogStream }));
 
 app.use("/admin", admin);
 app.use("/auth", authRoute);
@@ -54,6 +50,7 @@ app.use("/news", newsRoute);
 app.use("/image", imageRoute);
 app.use("/products", productRoute);
 app.use("/cart", cartRoute);
+app.use("/invoice", invoiceRoute);
 
 app.use("*", (req, res, next) => {
     const err = new AppError(404, "fail", UNDEFINED_ROUTE);
