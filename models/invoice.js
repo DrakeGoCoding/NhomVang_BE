@@ -14,6 +14,10 @@ const invoiceSchema = new mongoose.Schema({
                     ref: "Product",
                     required: true
                 },
+                name: {
+                    type: String,
+                    required: true
+                },
                 listedPrice: {
                     type: Number,
                     required: true
@@ -34,8 +38,7 @@ const invoiceSchema = new mongoose.Schema({
     discountTotal: Number,
     paymentMethod: {
         type: String,
-        enum: ["PayPal", "Stripe"],
-        default: "PayPal"
+        enum: ["PayPal", "Stripe"]
     },
     paymentStatus: {
         type: String,
