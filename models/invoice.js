@@ -11,9 +11,21 @@ const invoiceSchema = new mongoose.Schema({
             {
                 _id: {
                     type: mongoose.Schema.Types.ObjectId,
-                    ref: "Product"
+                    ref: "Product",
+                    required: true
                 },
-                quantity: Number
+                listedPrice: {
+                    type: Number,
+                    required: true
+                },
+                discountPrice: {
+                    type: Number,
+                    default: 0
+                },
+                quantity: {
+                    type: Number,
+                    required: true
+                }
             }
         ],
         required: true
@@ -35,7 +47,7 @@ const invoiceSchema = new mongoose.Schema({
         enum: ["pending", "in_progress", "delivered", "failed"],
         default: "pending"
     },
-    createdAt: { type: Date, default: Date.now, immutable: true },
+    createdDate: { type: Date, default: Date.now, immutable: true },
     logs: {
         type: [
             {
