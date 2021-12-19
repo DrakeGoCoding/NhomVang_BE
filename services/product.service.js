@@ -55,7 +55,7 @@ const getAllProducts = async (filter = {}, limit = 10, offset = 0) => {
     return {
         statusCode: 200,
         data: {
-            productList: productList.map(product => responseProduct(product.toJSON())),
+            productList: productList.map(product => responseProduct(product)),
             total
         }
     };

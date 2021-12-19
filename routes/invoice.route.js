@@ -7,9 +7,11 @@ router.use(restrictTo("user"));
 
 router.get("/", invoiceController.getAllInvoices);
 router.get("/:invoiceId", invoiceController.getInvoice);
+router.get("/paypal/success/:invoiceId", invoiceController.payWithPaypalSuccess);
+router.get("/paypal/cancel/:invoiceId", invoiceController.payWithPaypalCancel);
 router.post("/", invoiceController.createInvoice);
 router.post("/cancel/:invoiceId", invoiceController.cancelInvoice);
-router.post("/pay/paypal/:invoiceId", invoiceController.payWithPaypal);
-router.post("/pay/stripe/:invoiceId", invoiceController.payWithStripe);
+router.post("/paypal/:invoiceId", invoiceController.payWithPaypal);
+router.post("/stripe/:invoiceId", invoiceController.payWithStripe);
 
 module.exports = router;

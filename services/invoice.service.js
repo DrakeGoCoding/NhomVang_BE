@@ -118,14 +118,25 @@ const payWithPaypal = async (userId, invoiceId) => {
     }
 
     const payment = await createPayment(invoice);
+    const approveUrl = payment.links.find(link => link.rel === "approval_url");
 
     return {
         statusCode: payment.statusCode,
-        data: payment.links
+        url: approveUrl
     };
 };
 
-const payWithStripe = async (userId, invoiceId) => {};
+const payWithPaypalSuccess = async (userId, invoiceId) => {
+
+}
+
+const payWithPaypalCancel = async (userId, invoiceId) => {
+
+}
+
+const payWithStripe = async (userId, invoiceId) => {
+	
+};
 
 module.exports = {
     getAllInvoices,
@@ -133,5 +144,7 @@ module.exports = {
     createInvoice,
     cancelInvoice,
     payWithPaypal,
+	payWithPaypalSuccess,
+	payWithPaypalCancel,
     payWithStripe
 };
