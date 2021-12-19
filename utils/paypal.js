@@ -20,8 +20,8 @@ const createPayment = invoice => {
             payment_method: "paypal"
         },
         redirect_urls: {
-            return_url: "https://nhomvang-demo.web.app/paypal/success",
-            cancel_url: "https://nhomvang-demo.web.app/paypal/cancel"
+            return_url: `https://nhomvang-be.herokuapp.com/paypal/success/${_id}`,
+            cancel_url: `https://nhomvang-be.herokuapp.com/paypal/cancel/${_id}`
         },
         transactions: [
             {
