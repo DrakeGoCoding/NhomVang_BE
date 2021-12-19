@@ -25,7 +25,7 @@ module.exports = {
     NOT_FOUND_INVOICE: "This invoice does not exist.",
     NOT_FOUND_NEWS: "This news does not exist.",
     NOT_FOUND_PRODUCT: "This product does not exist.",
-    NOT_FOUND_PRODUCT_IN_CART: "This product does not exist in your cart.",
+    NOT_FOUND_PRODUCT_IN_CART: "A product does not exist in your cart.",
     NOT_FOUND_USER: "This account does not exist.",
     SYSTEM_ERROR: "System error. Please contact us for support.",
     UNDEFINED_ROUTE: "Undefined route.",
