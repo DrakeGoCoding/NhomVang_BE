@@ -1,6 +1,5 @@
-const { paypal } = require("@configs");
+const { paypal } = require("../configs");
 const AppError = require("@utils/appError");
-const { SYSTEM_ERROR } = require("@constants/error");
 
 const createPayment = invoice => {
     const { _id, products, total, discountTotal } = invoice;
@@ -19,8 +18,8 @@ const createPayment = invoice => {
             payment_method: "paypal"
         },
         redirect_urls: {
-            return_url: `https://nhomvang-be.herokuapp.com/invoice/paypal/success`,
-            cancel_url: `https://nhomvang-be.herokuapp.com/invoice/paypal/cancel`
+            return_url: `${process.env.APP_URL}/invoice/paypal/success`,
+            cancel_url: `${process.env.APP_URL}/invoice/paypal/cancel`
         },
         transactions: [
             {
@@ -37,8 +36,8 @@ const createPayment = invoice => {
     return new Promise(function (resolve, reject) {
         paypal.payment.create(create_payment_json, function (error, payment) {
             if (error) {
-                console.log(error.response);
-                reject(new AppError(500, "fail", SYSTEM_ERROR));
+                const { httpStatusCode, message } = error.response;
+                reject(new AppError(httpStatusCode, "fail", message));
             } else {
                 resolve(payment);
             }
@@ -46,12 +45,48 @@ const createPayment = invoice => {
     });
 };
 
+const executePayment = (paymentId, payerId) => {
+    const execute_payment_json = {
+        payer_id: payerId
+    };
+
+    return new Promise(function (resolve, reject) {
+        paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+            if (error) {
+                const { httpStatusCode, message } = error.response;
+                reject(new AppError(httpStatusCode, "fail", message));
+            } else {
+                resolve(payment);
+            }
+        });
+    });
+};
+
+const refundPayment = (saleId, amount) => {
+	const refund_details = {
+		amount: {
+			currency: "USD",
+			total: amount.toString()
+		}
+	}
+    return new Promise(function (resolve, reject) {
+        paypal.sale.refund(saleId, refund_details, function(error, refund) {
+			if (error) {
+                const { httpStatusCode, message } = error.response;
+                reject(new AppError(httpStatusCode, "fail", message));
+            } else {
+                resolve(refund);
+            }
+		})
+    });
+};
+
 const getPaymentById = paymentId => {
     return new Promise(function (resolve, reject) {
         paypal.payment.get(paymentId, function (error, payment) {
             if (error) {
-                console.log(error.response);
-                reject(new AppError(500, "fail", SYSTEM_ERROR));
+                const { httpStatusCode, message } = error.response;
+                reject(new AppError(httpStatusCode, "fail", message));
             } else {
                 resolve(payment);
             }
@@ -61,5 +96,7 @@ const getPaymentById = paymentId => {
 
 module.exports = {
     createPayment,
+    executePayment,
+    refundPayment,
     getPaymentById
 };
