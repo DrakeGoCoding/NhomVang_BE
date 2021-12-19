@@ -75,7 +75,6 @@ const payWithPaypal = async (req, res, next) => {
         }
 
         const { statusCode, url } = await invoiceService.payWithPaypal(userId, invoiceId);
-        console.log(url);
         res.status(statusCode).redirect(url);
     } catch (error) {
         next(error);
