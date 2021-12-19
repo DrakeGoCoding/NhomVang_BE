@@ -1,4 +1,4 @@
-const { paypal } = require("../configs");
+const { paypal } = require("@configs");
 const AppError = require("@utils/appError");
 
 const createPayment = invoice => {
