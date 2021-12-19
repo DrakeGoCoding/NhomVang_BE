@@ -83,7 +83,7 @@ const payWithPaypal = async (req, res, next) => {
 
 const payWithPaypalSuccess = async (req, res, next) => {
     try {
-		console.log(req.query);
+		res.json(req.query)
         // const { statusCode, url } = await invoiceService.payWithPaypalSuccess(invoiceId);
         // res.status(statusCode).redirect(url);
     } catch (error) {
@@ -93,7 +93,7 @@ const payWithPaypalSuccess = async (req, res, next) => {
 
 const payWithPaypalCancel = async (req, res, next) => {
     try {
-		console.log(req.query);
+		res.json(req.query);
         // const { statusCode, url } = await invoiceService.payWithPaypalCancel(userId, invoiceId);
         // res.status(statusCode).redirect(url);
     } catch (error) {
