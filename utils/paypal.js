@@ -3,17 +3,16 @@ const AppError = require("@utils/appError");
 const { SYSTEM_ERROR } = require("@constants/error");
 
 const createPayment = invoice => {
-    const { _id, products } = invoice;
+    const { _id, products, total, discountTotal } = invoice;
     const items = products.map(item => {
         return {
             name: item.name,
             sku: item._id,
-            price: ((item.discountPrice || item.listedPrice) / 23000).toFixed(2),
+            price: item.discountPrice || item.listedPrice,
             quantity: item.quantity,
             currency: "USD"
         };
     });
-    const total = items.reduce((sum, item) => sum + Number.parseFloat(item.price) * item.quantity, 0);
     const create_payment_json = {
         intent: "sale",
         payer: {
@@ -29,7 +28,7 @@ const createPayment = invoice => {
                 item_list: { items },
                 amount: {
                     currency: "USD",
-                    total: total.toFixed(2)
+                    total: discountTotal || total
                 }
             }
         ]
