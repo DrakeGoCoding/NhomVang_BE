@@ -8,7 +8,7 @@ const createPayment = invoice => {
         return {
             name: item.name,
             sku: item._id,
-            price: item.discountPrice || item.listedPrice,
+            price: (item.discountPrice || item.listedPrice).toFixed(2),
             quantity: item.quantity,
             currency: "USD"
         };
@@ -19,8 +19,8 @@ const createPayment = invoice => {
             payment_method: "paypal"
         },
         redirect_urls: {
-            return_url: `https://nhomvang-be.herokuapp.com/paypal/success/${_id}`,
-            cancel_url: `https://nhomvang-be.herokuapp.com/paypal/cancel/${_id}`
+            return_url: `https://nhomvang-be.herokuapp.com/invoice/paypal/success`,
+            cancel_url: `https://nhomvang-be.herokuapp.com/invoice/paypal/cancel`
         },
         transactions: [
             {
@@ -28,7 +28,7 @@ const createPayment = invoice => {
                 item_list: { items },
                 amount: {
                     currency: "USD",
-                    total: discountTotal || total
+                    total: (discountTotal || total).toFixed(2)
                 }
             }
         ]
