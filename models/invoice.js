@@ -45,6 +45,7 @@ const invoiceSchema = new mongoose.Schema({
         enum: ["pending", "done"],
         default: "pending"
     },
+    paymentId: { type: String },
     status: {
         type: String,
         enum: ["pending", "in_progress", "delivered", "failed"],

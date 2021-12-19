@@ -75,7 +75,7 @@ const payWithPaypal = async (req, res, next) => {
         }
 
         const { statusCode, url } = await invoiceService.payWithPaypal(userId, invoiceId);
-        res.status(statusCode).redirect(url);
+		res.status(statusCode).redirect(url);
     } catch (error) {
         next(error);
     }
@@ -83,9 +83,11 @@ const payWithPaypal = async (req, res, next) => {
 
 const payWithPaypalSuccess = async (req, res, next) => {
     try {
-		res.json(req.query)
-        // const { statusCode, url } = await invoiceService.payWithPaypalSuccess(invoiceId);
-        // res.status(statusCode).redirect(url);
+		const payerId = req.query.PayerID;
+		const paymentId = req.query.paymentId;
+
+        const { statusCode, url } = await invoiceService.payWithPaypalSuccess(paymentId, payerId);
+		res.status(statusCode).redirect(url);
     } catch (error) {
         next(error);
     }
@@ -93,9 +95,8 @@ const payWithPaypalSuccess = async (req, res, next) => {
 
 const payWithPaypalCancel = async (req, res, next) => {
     try {
-		res.json(req.query);
-        // const { statusCode, url } = await invoiceService.payWithPaypalCancel(userId, invoiceId);
-        // res.status(statusCode).redirect(url);
+        const { statusCode, url } = await invoiceService.payWithPaypalCancel();
+        res.status(statusCode).redirect(url);
     } catch (error) {
         next(error);
     }

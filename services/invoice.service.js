@@ -1,9 +1,9 @@
-const Invoice = require("../models/invoice");
-const Cart = require("../models/cart");
+const Invoice = require("@models/invoice");
+const Cart = require("@models/cart");
 const { responseInvoice } = require("@utils/responsor");
 const AppError = require("@utils/appError");
 const { FORBIDDEN, NOT_FOUND_INVOICE, NOT_FOUND_CART, NOT_FOUND_PRODUCT_IN_CART } = require("@constants/error");
-const { createPayment } = require("../utils/paypal");
+const { createPayment, executePayment, refundPayment, getPaymentById } = require("@utils/paypal");
 
 /**
  * Get all invoices by user id
@@ -61,7 +61,7 @@ const createInvoice = async (userId, products, paymentMethod) => {
     const toRemoveFromCart = [];
     for (const product of products) {
         const { _id, quantity, listedPrice, discountPrice } = product;
-		if (cart.items.findIndex(item => item._id.toString() === _id) >= 0) {
+        if (cart.items.findIndex(item => item._id.toString() === _id) >= 0) {
             total += listedPrice * quantity;
             discountTotal += (discountPrice || listedPrice) * quantity;
             toRemoveFromCart.push(_id);
@@ -73,12 +73,13 @@ const createInvoice = async (userId, products, paymentMethod) => {
     }
 
     cart.items = cart.items.filter(item => toRemoveFromCart.includes(item._id.toString()));
+    products = products.filter(item => toRemoveFromCart.includes(item._id.toString()));
 
     const newInvoice = await Invoice.create({
         user: userId,
         products,
-        total,
-        discountTotal,
+        total: parseFloat(total.toFixed(2)),
+        discountTotal: parseFloat(discountTotal.toFixed(2)),
         paymentMethod
     });
 
@@ -96,10 +97,26 @@ const createInvoice = async (userId, products, paymentMethod) => {
  * @param {String} invoiceId
  */
 const cancelInvoice = async (userId, invoiceId) => {
-    const invoice = await Invoice.findOneAndDelete({ _id: invoiceId, user: userId });
+    const invoice = await Invoice.findOne({ _id: invoiceId, user: userId });
     if (!invoice) {
         throw new AppError(404, "fail", NOT_FOUND_INVOICE);
     }
+
+    // if (invoice.status !== "in_progress") {
+    // 	throw new AppError(403, "fail", FORBIDDEN);
+    // }
+
+    const payment = await getPaymentById(invoice.paymentId);
+    const amount = invoice.discountTotal || invoice.total;
+    const saleId = payment.transactions[0].related_resources[0].sale.id;
+    await refundPayment(saleId, amount);
+
+    invoice.status === "failed";
+    invoice.logs.push({
+        user: userId,
+        action: "cancel"
+    });
+    await invoice.save();
 
     return {
         statusCode: 200,
@@ -126,17 +143,36 @@ const payWithPaypal = async (userId, invoiceId) => {
     };
 };
 
-const payWithPaypalSuccess = async (userId, invoiceId) => {
+const payWithPaypalSuccess = async (paymentId, payerId) => {
+    const payment = await executePayment(paymentId, payerId);
+    const invoiceId = payment.transactions[0].invoice_number;
 
-}
+    const invoice = await Invoice.findById(invoiceId);
+    invoice.paymentMethod = "PayPal";
+    invoice.paymentStatus = "done";
+    invoice.paymentId = paymentId;
+    invoice.status = "in_progress";
+    invoice.logs.push({
+        user: invoice.user,
+        action: "change_status",
+        nextStatus: invoice.status
+    });
+    await invoice.save();
 
-const payWithPaypalCancel = async (userId, invoiceId) => {
-
-}
-
-const payWithStripe = async (userId, invoiceId) => {
-
+    return {
+        statusCode: 200,
+        url: `${process.env.APP_END_USER}/user/purchase/?type=in_progress`
+    };
 };
+
+const payWithPaypalCancel = async () => {
+    return {
+        statusCode: 200,
+        url: `${process.env.APP_END_USER}/user/purchase/?type=pending`
+    };
+};
+
+const payWithStripe = async (userId, invoiceId) => {};
 
 module.exports = {
     getAllInvoices,
@@ -144,7 +180,7 @@ module.exports = {
     createInvoice,
     cancelInvoice,
     payWithPaypal,
-	payWithPaypalSuccess,
-	payWithPaypalCancel,
+    payWithPaypalSuccess,
+    payWithPaypalCancel,
     payWithStripe
 };
