@@ -2,7 +2,46 @@ const Invoice = require("../models/invoice");
 const Cart = require("../models/cart");
 const { responseInvoice } = require("@utils/responsor");
 const AppError = require("@utils/appError");
-const { NOT_FOUND_INVOICE, NOT_FOUND_CART } = require("@constants/error");
+const { FORBIDDEN, NOT_FOUND_INVOICE, NOT_FOUND_CART } = require("@constants/error");
+const { createPayment } = require("../utils/paypal");
+
+/**
+ * Get all invoices by user id
+ * @param {String} userId
+ * @DrakeGoCoding 12/19/2021
+ */
+const getAllInvoices = async userId => {
+    const invoiceList = await Invoice.find({ user: userId });
+    return {
+        statusCode: 200,
+        data: {
+            invoiceList: invoiceList.map(invoice => responseInvoice(invoice.toJSON())),
+            total: invoiceList.length
+        }
+    };
+};
+
+/**
+ * Get invoice by id
+ * @param {String} userId
+ * @param {String} invoiceId
+ * @DrakeGoCoding 12/19/2021
+ */
+const getInvoice = async (userId, invoiceId) => {
+    const invoice = await Invoice.findById(invoiceId);
+    if (!invoice) {
+        throw new AppError(404, "fail", NOT_FOUND_INVOICE);
+    }
+
+    if (invoice.user.toString() !== userId.toString()) {
+        throw new AppError(403, "fail", FORBIDDEN);
+    }
+
+    return {
+        statusCode: 200,
+        data: responseInvoice(invoice.toJSON())
+    };
+};
 
 /**
  * Create a new invoice
@@ -37,7 +76,7 @@ const createInvoice = async (userId, products, paymentMethod) => {
         paymentMethod
     });
 
-	await cart.save();
+    await cart.save();
 
     return {
         statusCode: 201,
@@ -62,11 +101,29 @@ const cancelInvoice = async (userId, invoiceId) => {
     };
 };
 
-const payWithPaypal = async (userId, invoiceId) => {};
+const payWithPaypal = async (userId, invoiceId) => {
+    const invoice = await Invoice.findById(invoiceId);
+    if (!invoice) {
+        throw new AppError(404, "fail", NOT_FOUND_INVOICE);
+    }
+
+    if (invoice.user.toString() !== userId.toString()) {
+        throw new AppError(403, "fail", FORBIDDEN);
+    }
+
+    const payment = await createPayment(invoice);
+
+    return {
+        statusCode: payment.statusCode,
+        data: payment.links
+    };
+};
 
 const payWithStripe = async (userId, invoiceId) => {};
 
 module.exports = {
+    getAllInvoices,
+    getInvoice,
     createInvoice,
     cancelInvoice,
     payWithPaypal,

@@ -67,7 +67,8 @@ const invoiceSchema = new mongoose.Schema({
                 timestamp: { type: Date, default: Date.now, immutable: true }
             }
         ]
-    }
+    },
+    vouchers: [String]
 });
 
 const Invoice = mongoose.model("Invoice", invoiceSchema);

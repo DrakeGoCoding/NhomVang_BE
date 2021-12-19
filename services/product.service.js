@@ -52,20 +52,10 @@ const getAllProducts = async (filter = {}, limit = 10, offset = 0) => {
     const total = await result.count();
     const productList = await result.skip(offset).limit(limit).toArray();
 
-    if (!total || !productList || productList.length === 0) {
-        return {
-            statusCode: 200,
-            data: {
-                productList: [],
-                total: 0
-            }
-        };
-    }
-
     return {
         statusCode: 200,
         data: {
-            productList: productList.map(product => responseProduct(product)),
+            productList: productList.map(product => responseProduct(product.toJSON())),
             total
         }
     };
