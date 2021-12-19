@@ -2,7 +2,7 @@ const Invoice = require("../models/invoice");
 const Cart = require("../models/cart");
 const { responseInvoice } = require("@utils/responsor");
 const AppError = require("@utils/appError");
-const { FORBIDDEN, NOT_FOUND_INVOICE, NOT_FOUND_CART } = require("@constants/error");
+const { FORBIDDEN, NOT_FOUND_INVOICE, NOT_FOUND_CART, NOT_FOUND_PRODUCT_IN_CART } = require("@constants/error");
 const { createPayment } = require("../utils/paypal");
 
 /**
@@ -61,9 +61,15 @@ const createInvoice = async (userId, products, paymentMethod) => {
     const toRemoveFromCart = [];
     for (const product of products) {
         const { _id, quantity, listedPrice, discountPrice } = product;
-        total += listedPrice * quantity;
-        discountTotal += (discountPrice || listedPrice) * quantity;
-        toRemoveFromCart.push(_id);
+        if (cart.items.indexOf(item => item._id.toString() === _id) >= 0) {
+            total += listedPrice * quantity;
+            discountTotal += (discountPrice || listedPrice) * quantity;
+            toRemoveFromCart.push(_id);
+        }
+    }
+
+    if (toRemoveFromCart.length === 0) {
+        throw new AppError(400, "fail", NOT_FOUND_PRODUCT_IN_CART);
     }
 
     cart.items = cart.items.filter(item => toRemoveFromCart.includes(item._id.toString()));
