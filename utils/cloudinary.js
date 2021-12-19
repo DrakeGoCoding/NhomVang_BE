@@ -22,6 +22,7 @@ const uploadImage = async (file, folder = "") => {
             }
         };
     } catch (error) {
+        console.error(error);
         throw new AppError(500, "fail", SYSTEM_ERROR);
     }
 };
@@ -57,6 +58,7 @@ const createFolder = async folder => {
             data: result
         };
     } catch (error) {
+        console.error(error);
         throw new AppError(500, "fail", SYSTEM_ERROR);
     }
 };
@@ -76,6 +78,7 @@ const deleteFolder = async folder => {
             data: folder
         };
     } catch (error) {
+        console.error(error);
         throw new AppError(500, "fail", SYSTEM_ERROR);
     }
 };

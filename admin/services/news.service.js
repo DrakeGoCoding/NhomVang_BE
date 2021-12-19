@@ -41,6 +41,7 @@ const updateNews = async (slug, news) => {
 /**
  * Delete a news by slug
  * @param {String} slug
+ * @DrakeGoCoding 11/13/2021
  */
 const deleteNews = async slug => {
     const news = await News.findOneAndDelete({ slug }, { new: true });
