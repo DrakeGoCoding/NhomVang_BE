@@ -72,7 +72,7 @@ const createInvoice = async (userId, products, paymentMethod) => {
         throw new AppError(400, "fail", NOT_FOUND_PRODUCT_IN_CART);
     }
 
-    cart.items = cart.items.filter(item => toRemoveFromCart.includes(item._id.toString()));
+    cart.items = cart.items.filter(item => toRemoveFromCart.includes(item._id));
     products = products.filter(item => toRemoveFromCart.includes(item._id.toString()));
 
     const newInvoice = await Invoice.create({
