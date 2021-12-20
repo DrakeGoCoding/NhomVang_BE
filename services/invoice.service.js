@@ -47,10 +47,9 @@ const getInvoice = async (userId, invoiceId) => {
  * Create a new invoice
  * @param {String} userId
  * @param {Array} products
- * @param {String} paymentMethod
  * @DrakeGoCoding 12/15/2021
  */
-const createInvoice = async (userId, products, paymentMethod) => {
+const createInvoice = async (userId, products) => {
     const cart = await Cart.findOne({ user: userId });
     if (!cart) {
         throw new AppError(404, "fail", NOT_FOUND_CART);
@@ -79,8 +78,7 @@ const createInvoice = async (userId, products, paymentMethod) => {
         user: userId,
         products,
         total: parseFloat(total.toFixed(2)),
-        discountTotal: parseFloat(discountTotal.toFixed(2)),
-        paymentMethod
+        discountTotal: parseFloat(discountTotal.toFixed(2))
     });
 
     await cart.save();

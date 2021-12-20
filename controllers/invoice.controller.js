@@ -30,7 +30,7 @@ const getInvoice = async (req, res, next) => {
 const createInvoice = async (req, res, next) => {
     try {
         const userId = req.user._id;
-        const { products, paymentMethod } = req.body.invoice;
+        const { products } = req.body.invoice;
         if (!Array.isArray(products) || !products.length) {
             throw new AppError(400, "fail", MISSING_INVOICE_PRODUCTS);
         }
@@ -44,7 +44,7 @@ const createInvoice = async (req, res, next) => {
             throw new AppError(400, "fail", INVALID_INVOICE_PRODUCTS);
         }
 
-        const { statusCode, data } = await invoiceService.createInvoice(userId, products, paymentMethod);
+        const { statusCode, data } = await invoiceService.createInvoice(userId, products);
         res.status(statusCode).json(data);
     } catch (error) {
         next(error);
