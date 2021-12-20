@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-dotenv.config();
+
+if (process.env.NODE_ENV !== "production") {
+    const dotenv = require("dotenv");
+    dotenv.config();
+}
 
 process.on("uncaughtException", err => {
     console.log("Uncaught Exception! Shutting down now...");
