@@ -39,7 +39,9 @@ const getInvoice = async (userId, invoiceId) => {
 
     return {
         statusCode: 200,
-        data: responseInvoice(invoice.toJSON())
+        data: {
+            invoice: responseInvoice(invoice.toJSON())
+        }
     };
 };
 
