@@ -75,7 +75,7 @@ const payWithPaypal = async (req, res, next) => {
         }
 
         const { statusCode, url } = await invoiceService.payWithPaypal(userId, invoiceId);
-		res.status(statusCode).redirect(url);
+        res.status(statusCode).redirect(url);
     } catch (error) {
         next(error);
     }
@@ -83,11 +83,11 @@ const payWithPaypal = async (req, res, next) => {
 
 const payWithPaypalSuccess = async (req, res, next) => {
     try {
-		const payerId = req.query.PayerID;
-		const paymentId = req.query.paymentId;
+        const payerId = req.query.PayerID;
+        const paymentId = req.query.paymentId;
 
         const { statusCode, url } = await invoiceService.payWithPaypalSuccess(paymentId, payerId);
-		res.status(statusCode).redirect(url);
+        res.status(statusCode).redirect(url);
     } catch (error) {
         next(error);
     }
@@ -104,6 +104,14 @@ const payWithPaypalCancel = async (req, res, next) => {
 
 const payWithStripe = async (req, res, next) => {
     try {
+        const userId = req.user._id;
+        const invoiceId = req.params.invoiceId;
+        if (!invoiceId) {
+            throw new AppError(400, "fail", MISSING_INVOICE_ID);
+        }
+
+        const { statusCode, data } = await invoiceService.payWithStripe(userId, invoiceId);
+        res.status(statusCode).json(data);
     } catch (error) {
         next(error);
     }

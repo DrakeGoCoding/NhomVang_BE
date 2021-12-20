@@ -23,7 +23,11 @@ const login = async (username, password) => {
     const token = generateToken(user._id);
     return {
         statusCode: 200,
-        data: { token, user: responseUser(user.toJSON()) }
+        data: {
+            token,
+            stripeKey: process.env.STRIPE_PUBLIC,
+            user: responseUser(user.toJSON())
+        }
     };
 };
 
@@ -60,7 +64,8 @@ const register = async (username, password) => {
         statusCode: 201,
         data: {
             token,
-            user: responseUser(user.toJSON()),
+			stripeKey: process.env.STRIPE_PUBLIC,
+			user: responseUser(user.toJSON()),
             cart: responseCart(cart.toJSON())
         }
     };
