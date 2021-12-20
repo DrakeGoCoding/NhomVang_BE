@@ -50,7 +50,7 @@ app.use("/news", newsRoute);
 app.use("/image", imageRoute);
 app.use("/products", productRoute);
 app.use("/cart", cartRoute);
-app.use("/invoice", invoiceRoute);
+app.use("/invoices", invoiceRoute);
 
 app.use("*", (req, res, next) => {
     const err = new AppError(404, "fail", UNDEFINED_ROUTE);
