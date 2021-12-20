@@ -44,15 +44,9 @@ const register = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
     try {
         let user = req.body.user;
-        if (!user || !user.username) {
-            throw new AppError(400, "fail", MISSING_USER_INPUT);
-        }
-
-        if (user.username !== req.user.username) {
-            throw new AppError(403, "fail", FORBIDDEN);
-        }
 
         user = Object.assign(user, {
+			username: req.user.username,
             hash: undefined,
             salt: undefined,
             role: undefined,
