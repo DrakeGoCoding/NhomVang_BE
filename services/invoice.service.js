@@ -102,9 +102,9 @@ const cancelInvoice = async (userId, invoiceId) => {
         throw new AppError(404, "fail", NOT_FOUND_INVOICE);
     }
 
-    // if (invoice.status !== "in_progress") {
-    // 	throw new AppError(403, "fail", FORBIDDEN);
-    // }
+    if (invoice.status === "in_progress" || invoice.status === "delivered") {
+        throw new AppError(403, "fail", FORBIDDEN);
+    }
 
     const payment = await getPaymentById(invoice.paymentId);
     const amount = invoice.discountTotal || invoice.total;
@@ -120,7 +120,7 @@ const cancelInvoice = async (userId, invoiceId) => {
 
     return {
         statusCode: 200,
-        data: { invoice: invoiceId }
+        data: { status: "success", invoice: invoiceId }
     };
 };
 
