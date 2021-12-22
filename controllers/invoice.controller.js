@@ -42,7 +42,7 @@ const createInvoice = async (req, res, next) => {
 
         const requiredProps = ["_id", "listedPrice", "quantity"];
         const isValidProducts = products.every(product => {
-            return requiredProps.every(prop => Object.hasOwn(product, prop));
+            return requiredProps.every(prop => Object.prototype.hasOwnProperty.call(product, prop));
         });
 
         if (!isValidProducts) {
