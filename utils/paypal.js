@@ -36,8 +36,9 @@ const createPayment = invoice => {
     return new Promise(function (resolve, reject) {
         paypal.payment.create(create_payment_json, function (error, payment) {
             if (error) {
+				console.log(error);
                 const { httpStatusCode, message } = error.response;
-                throw new AppError(httpStatusCode, "fail", message);
+                reject(new AppError(httpStatusCode, "fail", message));
             } else {
                 resolve(payment);
             }
@@ -53,8 +54,9 @@ const executePayment = (paymentId, payerId) => {
     return new Promise(function (resolve, reject) {
         paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
             if (error) {
-                const { httpStatusCode, message } = error.response;
-                throw new AppError(httpStatusCode, "fail", message);
+				console.log(error);
+				const { httpStatusCode, message } = error.response;
+                reject(new AppError(httpStatusCode, "fail", message));
             } else {
                 resolve(payment);
             }
@@ -63,21 +65,22 @@ const executePayment = (paymentId, payerId) => {
 };
 
 const refundPayment = (saleId, amount) => {
-    const refund_details = {
-        amount: {
-            currency: "USD",
-            total: amount.toString()
-        }
-    };
+	const refund_details = {
+		amount: {
+			currency: "USD",
+			total: amount.toString()
+		}
+	}
     return new Promise(function (resolve, reject) {
-        paypal.sale.refund(saleId, refund_details, function (error, refund) {
-            if (error) {
-                const { httpStatusCode, message } = error.response;
-                throw new AppError(httpStatusCode, "fail", message);
+        paypal.sale.refund(saleId, refund_details, function(error, refund) {
+			if (error) {
+				console.log(error);
+				const { httpStatusCode, message } = error.response;
+                reject(new AppError(httpStatusCode, "fail", message));
             } else {
                 resolve(refund);
             }
-        });
+		})
     });
 };
 
@@ -86,7 +89,7 @@ const getPaymentById = paymentId => {
         paypal.payment.get(paymentId, function (error, payment) {
             if (error) {
                 const { httpStatusCode, message } = error.response;
-                throw new AppError(httpStatusCode, "fail", message);
+                reject(new AppError(httpStatusCode, "fail", message));
             } else {
                 resolve(payment);
             }
