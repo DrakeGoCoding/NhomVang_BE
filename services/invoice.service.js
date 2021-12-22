@@ -178,14 +178,14 @@ const payWithPaypalSuccess = async (paymentId, payerId) => {
 
     return {
         statusCode: 200,
-        url: `${process.env.APP_END_USER_TEST_URL}/user/purchase/?type=in_progress`
+        url: `${process.env.APP_END_USER}/user/purchase/?type=in_progress`
     };
 };
 
 const payWithPaypalCancel = async () => {
     return {
         statusCode: 200,
-        url: `${process.env.APP_END_USER_TEST_URL}/user/purchase/?type=pending`
+        url: `${process.env.APP_END_USER}/user/purchase/?type=pending`
     };
 };
 
