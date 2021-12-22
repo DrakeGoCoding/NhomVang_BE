@@ -2,7 +2,13 @@ const Invoice = require("@models/invoice");
 const Cart = require("@models/cart");
 const { responseInvoice } = require("@utils/responsor");
 const AppError = require("@utils/appError");
-const { FORBIDDEN, NOT_FOUND_INVOICE, NOT_FOUND_CART, NOT_FOUND_PRODUCT_IN_CART } = require("@constants/error");
+const {
+    FORBIDDEN,
+    NOT_FOUND_INVOICE,
+    NOT_FOUND_CART,
+    NOT_FOUND_PRODUCT_IN_CART,
+    UNKNOWN_PAYMENT_METHOD
+} = require("@constants/error");
 const { createPayment, executePayment, refundPayment, getPaymentById } = require("@utils/paypal");
 
 /**
@@ -91,6 +97,17 @@ const createInvoice = async (userId, products) => {
     };
 };
 
+const payInvoice = async (userId, invoiceId, paymentMethod) => {
+    switch (paymentMethod) {
+        case "paypal":
+            return await payWithPaypal(userId, invoiceId);
+        case "stripe":
+            return await payWithStripe(userId, invoiceId);
+        default:
+            throw new AppError(400, "fail", UNKNOWN_PAYMENT_METHOD);
+    }
+};
+
 /**
  * Cancel an invoice with invoice id and user id
  * @param {String} userId
@@ -138,8 +155,8 @@ const payWithPaypal = async (userId, invoiceId) => {
     const approveUrl = payment.links.find(link => link.rel === "approval_url");
 
     return {
-        statusCode: payment.statusCode,
-        url: approveUrl.href
+        statusCode: payment.httpStatusCode,
+        data: { url: approveUrl.href }
     };
 };
 
@@ -148,7 +165,7 @@ const payWithPaypalSuccess = async (paymentId, payerId) => {
     const invoiceId = payment.transactions[0].invoice_number;
 
     const invoice = await Invoice.findById(invoiceId);
-    invoice.paymentMethod = "PayPal";
+    invoice.paymentMethod = "paypal";
     invoice.paymentStatus = "done";
     invoice.paymentId = paymentId;
     invoice.status = "in_progress";
@@ -172,12 +189,18 @@ const payWithPaypalCancel = async () => {
     };
 };
 
-const payWithStripe = async (userId, invoiceId) => {};
+const payWithStripe = async (userId, invoiceId) => {
+    return {
+        statusCode: 200,
+        data: { userId, invoiceId }
+    };
+};
 
 module.exports = {
     getAllInvoices,
     getInvoice,
     createInvoice,
+    payInvoice,
     cancelInvoice,
     payWithPaypal,
     payWithPaypalSuccess,

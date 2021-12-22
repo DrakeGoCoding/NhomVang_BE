@@ -1,6 +1,11 @@
 const invoiceService = require("@services/invoice.service");
 const AppError = require("@utils/appError");
-const { MISSING_INVOICE_PRODUCTS, INVALID_INVOICE_PRODUCTS, MISSING_INVOICE_ID } = require("@constants/error");
+const {
+    MISSING_INVOICE_PRODUCTS,
+    INVALID_INVOICE_PRODUCTS,
+    MISSING_INVOICE_ID,
+    MISSING_PAYMENT_METHOD
+} = require("@constants/error");
 
 const getAllInvoices = async (req, res, next) => {
     try {
@@ -51,6 +56,25 @@ const createInvoice = async (req, res, next) => {
     }
 };
 
+const payInvoice = async (req, res, next) => {
+    try {
+        const userId = req.user._id;
+        const { invoice: invoiceId, method: paymentMethod } = req.query;
+        if (!invoiceId) {
+            throw new AppError(400, "fail", MISSING_INVOICE_ID);
+        }
+
+        if (!paymentMethod) {
+            throw new AppError(400, "fail", MISSING_PAYMENT_METHOD);
+        }
+
+        const { statusCode, data } = await invoiceService.payInvoice(userId, invoiceId, paymentMethod);
+        res.status(statusCode).json(data);
+    } catch (error) {
+        next(error);
+    }
+};
+
 const cancelInvoice = async (req, res, next) => {
     try {
         const userId = req.user._id;
@@ -74,8 +98,8 @@ const payWithPaypal = async (req, res, next) => {
             throw new AppError(400, "fail", MISSING_INVOICE_ID);
         }
 
-        const { statusCode, url } = await invoiceService.payWithPaypal(userId, invoiceId);
-        res.status(statusCode).redirect(url);
+        const { statusCode, data } = await invoiceService.payWithPaypal(userId, invoiceId);
+        res.status(statusCode).json(data);
     } catch (error) {
         next(error);
     }
@@ -83,9 +107,7 @@ const payWithPaypal = async (req, res, next) => {
 
 const payWithPaypalSuccess = async (req, res, next) => {
     try {
-        const payerId = req.query.PayerID;
-        const paymentId = req.query.paymentId;
-
+        const { PayerID: payerId, paymentId } = req.query;
         const { statusCode, url } = await invoiceService.payWithPaypalSuccess(paymentId, payerId);
         res.status(statusCode).redirect(url);
     } catch (error) {
@@ -121,6 +143,7 @@ module.exports = {
     getAllInvoices,
     getInvoice,
     createInvoice,
+    payInvoice,
     cancelInvoice,
     payWithPaypal,
     payWithPaypalSuccess,

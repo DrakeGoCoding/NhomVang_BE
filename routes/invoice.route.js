@@ -11,8 +11,7 @@ router.use(restrictTo("user"));
 router.get("/", invoiceController.getAllInvoices);
 router.get("/:invoiceId", invoiceController.getInvoice);
 router.post("/", invoiceController.createInvoice);
+router.post("/pay", invoiceController.payInvoice);
 router.post("/cancel/:invoiceId", invoiceController.cancelInvoice);
-router.post("/paypal/:invoiceId", invoiceController.payWithPaypal);
-router.post("/stripe/:invoiceId", invoiceController.payWithStripe);
 
 module.exports = router;
