@@ -18,8 +18,8 @@ const createPayment = invoice => {
             payment_method: "paypal"
         },
         redirect_urls: {
-            return_url: `${process.env.APP_URL}/invoices/paypal/success`,
-            cancel_url: `${process.env.APP_URL}/invoices/paypal/cancel`
+            return_url: `${process.env.APP_TEST_URL}/invoices/paypal/success`,
+            cancel_url: `${process.env.APP_TEST_URL}/invoices/paypal/cancel`
         },
         transactions: [
             {
