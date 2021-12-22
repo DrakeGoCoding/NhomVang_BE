@@ -39,7 +39,7 @@ const invoiceSchema = new mongoose.Schema({
     discountTotal: Number,
     paymentMethod: {
         type: String,
-        enum: ["PayPal", "Stripe"]
+        enum: ["paypal", "stripe"]
     },
     paymentStatus: {
         type: String,

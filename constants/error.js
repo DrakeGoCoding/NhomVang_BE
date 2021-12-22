@@ -19,6 +19,7 @@ module.exports = {
     MISSING_INVOICE_PRODUCTS: "Please provide a product list.",
     MISSING_INVOICE_ID: "Please provide invoice id",
     MISSING_NEWS_INPUT: "Please provide all required fields for news.",
+    MISSING_PAYMENT_METHOD: "Please provide payment method.",
     MISSING_PRODUCT_INPUT: "Please provide all required fields for product",
     MISSING_USER_INPUT: "Please provide all required fields for user.",
     NOT_FOUND_CART: "This account does not own any cart.",
@@ -29,5 +30,6 @@ module.exports = {
     NOT_FOUND_USER: "This account does not exist.",
     SYSTEM_ERROR: "System error. Please contact us for support.",
     UNDEFINED_ROUTE: "Undefined route.",
+    UNKNOWN_PAYMENT_METHOD: "Unknown payment method.",
     WRONG_AUTH_INPUT: "Incorrect email or password."
 };
