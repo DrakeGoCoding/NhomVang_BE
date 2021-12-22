@@ -37,7 +37,7 @@ const createPayment = invoice => {
         paypal.payment.create(create_payment_json, function (error, payment) {
             if (error) {
                 const { httpStatusCode, message } = error.response;
-                reject(new AppError(httpStatusCode, "fail", message));
+                throw new AppError(httpStatusCode, "fail", message);
             } else {
                 resolve(payment);
             }
@@ -54,7 +54,7 @@ const executePayment = (paymentId, payerId) => {
         paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
             if (error) {
                 const { httpStatusCode, message } = error.response;
-                reject(new AppError(httpStatusCode, "fail", message));
+                throw new AppError(httpStatusCode, "fail", message);
             } else {
                 resolve(payment);
             }
@@ -63,21 +63,21 @@ const executePayment = (paymentId, payerId) => {
 };
 
 const refundPayment = (saleId, amount) => {
-	const refund_details = {
-		amount: {
-			currency: "USD",
-			total: amount.toString()
-		}
-	}
+    const refund_details = {
+        amount: {
+            currency: "USD",
+            total: amount.toString()
+        }
+    };
     return new Promise(function (resolve, reject) {
-        paypal.sale.refund(saleId, refund_details, function(error, refund) {
-			if (error) {
+        paypal.sale.refund(saleId, refund_details, function (error, refund) {
+            if (error) {
                 const { httpStatusCode, message } = error.response;
-                reject(new AppError(httpStatusCode, "fail", message));
+                throw new AppError(httpStatusCode, "fail", message);
             } else {
                 resolve(refund);
             }
-		})
+        });
     });
 };
 
@@ -86,7 +86,7 @@ const getPaymentById = paymentId => {
         paypal.payment.get(paymentId, function (error, payment) {
             if (error) {
                 const { httpStatusCode, message } = error.response;
-                reject(new AppError(httpStatusCode, "fail", message));
+                throw new AppError(httpStatusCode, "fail", message);
             } else {
                 resolve(payment);
             }
