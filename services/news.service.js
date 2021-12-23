@@ -4,17 +4,17 @@ const { responseNews } = require("@utils/responsor");
 const { NOT_FOUND_NEWS } = require("@constants/error");
 
 /**
- * 
+ *
  * @param {{
  * 		title: String,
  * 		tag: String,
  * }} filter : ;
- * @param {*} limit 
- * @param {*} offset 
- * @returns 
+ * @param {*} limit
+ * @param {*} offset
+ * @returns
  */
 const getAllNews = async (filter = {}, limit = 10, offset = 0) => {
-    const query = News.collection.aggregate([
+    const aggregation = [
         { $sort: { modifiedDate: -1 } },
         {
             $lookup: {
@@ -38,7 +38,7 @@ const getAllNews = async (filter = {}, limit = 10, offset = 0) => {
                             thumbnail: 1,
                             description: 1,
                             slug: 1,
-							tags: 1,
+                            tags: 1,
                             createdDate: 1,
                             modifiedDate: 1
                         }
@@ -48,8 +48,21 @@ const getAllNews = async (filter = {}, limit = 10, offset = 0) => {
         },
         { $unwind: "$stage1" },
         { $project: { total: "$stage1.count", newsList: "$stage2" } }
-    ]);
+    ];
 
+    if (filter.tag) {
+        aggregation.unshift({
+            $match: { tags: { $in: [filter.tag] } }
+        });
+    }
+
+    if (filter.title) {
+        aggregation.unshift({
+            $match: { title: { $regex: new RegExp(filter.title || "", "i") } }
+        });
+    }
+
+    const query = await News.collection.aggregate(aggregation);
     const data = (await query.toArray())[0];
     return {
         statusCode: 200,
