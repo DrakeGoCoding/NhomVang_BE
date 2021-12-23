@@ -3,7 +3,17 @@ const AppError = require("@utils/appError");
 const { responseNews } = require("@utils/responsor");
 const { NOT_FOUND_NEWS } = require("@constants/error");
 
-const getAllNews = async (limit = 10, offset = 0) => {
+/**
+ * 
+ * @param {{
+ * 		title: String,
+ * 		tag: String,
+ * }} filter : ;
+ * @param {*} limit 
+ * @param {*} offset 
+ * @returns 
+ */
+const getAllNews = async (filter = {}, limit = 10, offset = 0) => {
     const query = News.collection.aggregate([
         { $sort: { modifiedDate: -1 } },
         {
@@ -28,6 +38,7 @@ const getAllNews = async (limit = 10, offset = 0) => {
                             thumbnail: 1,
                             description: 1,
                             slug: 1,
+							tags: 1,
                             createdDate: 1,
                             modifiedDate: 1
                         }

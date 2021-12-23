@@ -3,8 +3,8 @@ const { UNDEFINED_ROUTE } = require("@constants/error");
 
 const getAllNews = async (req, res, next) => {
     try {
-        const { limit, offset } = req.query;
-        const { statusCode, data } = await newsService.getAllNews(limit, offset);
+        const { limit, offset, ...filter } = req.query;
+        const { statusCode, data } = await newsService.getAllNews(filter, limit, offset);
         res.status(statusCode).json(data);
     } catch (error) {
         next(error);
