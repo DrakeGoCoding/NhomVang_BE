@@ -4,7 +4,7 @@ const Cart = require("@models/cart");
 const { generateToken } = require("@utils/token");
 const { responseUser, responseCart } = require("@utils/responsor");
 const AppError = require("@utils/appError");
-const { WRONG_AUTH_INPUT, FOUND_USER } = require("@constants/error");
+const { WRONG_AUTH_INPUT, FOUND_USER, MISSING_OLD_PASSWORD, INCORRECT_PASSWORD } = require("@constants/error");
 
 /**
  * Login a registered account
@@ -64,8 +64,8 @@ const register = async (username, password) => {
         statusCode: 201,
         data: {
             token,
-			stripeKey: process.env.STRIPE_PUBLIC,
-			user: responseUser(user.toJSON()),
+            stripeKey: process.env.STRIPE_PUBLIC,
+            user: responseUser(user.toJSON()),
             cart: responseCart(cart.toJSON())
         }
     };
@@ -77,20 +77,32 @@ const register = async (username, password) => {
  * @DrakeGoCoding 11/22/2021
  */
 const updateUser = async user => {
-    const { username, password } = user;
+    const { username, password, oldPassword } = user;
     let hash, salt;
+    let updatedUser;
 
-    if (password) {
-        // generate salt then hash password
+    if (password && !oldPassword) {
+        throw new AppError(400, "fail", MISSING_OLD_PASSWORD);
+    }
+
+    updatedUser = await User.findOne({ username }).select("+hash +salt");
+    if (!updatedUser) {
+        throw new AppError(404, "fail", NOT_FOUND_USER);
+    }
+
+    if (password && oldPassword) {
+        const oldHash = bcrypt.hashSync(oldPassword, updatedUser.salt);
+        if (updatedUser.hash !== oldHash) {
+            throw new AppError(400, "fail", INCORRECT_PASSWORD);
+        }
+
         const saltRounds = Number.parseInt(process.env.SALT_ROUNDS);
         salt = bcrypt.genSaltSync(saltRounds);
         hash = bcrypt.hashSync(password, salt);
     }
 
-    const updatedUser = await User.findOneAndUpdate({ username }, { ...user, hash, salt }, { new: true });
-    if (!updatedUser) {
-        throw new AppError(404, "fail", NOT_FOUND_USER);
-    }
+    updatedUser = Object.assign(updatedUser, { ...user, hash, salt });
+    updatedUser = await updatedUser.save();
 
     return {
         statusCode: 200,
