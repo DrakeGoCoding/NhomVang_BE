@@ -36,9 +36,8 @@ const createPayment = invoice => {
     return new Promise(function (resolve, reject) {
         paypal.payment.create(create_payment_json, function (error, payment) {
             if (error) {
-				console.log(error);
-                const { httpStatusCode, message } = error.response;
-                reject(new AppError(httpStatusCode, "fail", message));
+                const { httpStatusCode, message, error_description } = error.response;
+                reject(new AppError(httpStatusCode, "fail", error_description || message));
             } else {
                 resolve(payment);
             }
@@ -54,9 +53,8 @@ const executePayment = (paymentId, payerId) => {
     return new Promise(function (resolve, reject) {
         paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
             if (error) {
-				console.log(error);
-				const { httpStatusCode, message } = error.response;
-                reject(new AppError(httpStatusCode, "fail", message));
+				const { httpStatusCode, message, error_description } = error.response;
+                reject(new AppError(httpStatusCode, "fail", error_description || message));
             } else {
                 resolve(payment);
             }
@@ -74,9 +72,8 @@ const refundPayment = (saleId, amount) => {
     return new Promise(function (resolve, reject) {
         paypal.sale.refund(saleId, refund_details, function(error, refund) {
 			if (error) {
-				console.log(error);
-				const { httpStatusCode, message } = error.response;
-                reject(new AppError(httpStatusCode, "fail", message));
+				const { httpStatusCode, message, error_description } = error.response;
+                reject(new AppError(httpStatusCode, "fail", error_description || message));
             } else {
                 resolve(refund);
             }
@@ -88,8 +85,8 @@ const getPaymentById = paymentId => {
     return new Promise(function (resolve, reject) {
         paypal.payment.get(paymentId, function (error, payment) {
             if (error) {
-                const { httpStatusCode, message } = error.response;
-                reject(new AppError(httpStatusCode, "fail", message));
+                const { httpStatusCode, message, error_description } = error.response;
+                reject(new AppError(httpStatusCode, "fail", error_description || message));
             } else {
                 resolve(payment);
             }
