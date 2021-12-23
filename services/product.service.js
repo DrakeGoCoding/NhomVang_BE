@@ -52,7 +52,6 @@ const getAllProducts = async (filter = {}, limit = 10, offset = 0) => {
     }
 
     const result = await Product.collection.find(query).sort({ modifiedDate: -1 });
-
     const total = await result.count();
     const productList = await result.skip(offset).limit(limit).toArray();
 

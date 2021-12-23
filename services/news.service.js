@@ -4,14 +4,14 @@ const { responseNews } = require("@utils/responsor");
 const { NOT_FOUND_NEWS } = require("@constants/error");
 
 /**
- *
+ * Get all invoices
  * @param {{
  * 		title: String,
  * 		tag: String,
- * }} filter : ;
- * @param {*} limit
- * @param {*} offset
- * @returns
+ * }} filter
+ * @param {Number} limit
+ * @param {Number} offset
+ * @DrakeGoCoding 12/23/2021
  */
 const getAllNews = async (filter = {}, limit = 10, offset = 0) => {
     const aggregation = [
