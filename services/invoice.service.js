@@ -128,7 +128,8 @@ const cancelInvoice = async (userId, invoiceId) => {
     const saleId = payment.transactions[0].related_resources[0].sale.id;
     await refundPayment(saleId, amount);
 
-    invoice.status === "failed";
+    invoice.status = "failed";
+	invoice.paymentMethod = "cancel";
     invoice.logs.push({
         user: userId,
         action: "cancel"
