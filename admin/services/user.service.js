@@ -7,10 +7,7 @@ const { NOT_FOUND_USER, FOUND_USER, FORBIDDEN } = require("@constants/error");
 /**
  * Get all users data
  * @param {{
- * 		username: String,
- * 		displayname: String,
- * 		email: String,
- * 		phonenumber: String,
+ * 		regex: String
  * 		role: String
  * }} filter
  * @param {Number} limit
@@ -21,24 +18,23 @@ const getAllUsers = async (filter = {}, limit = 10, offset = 0) => {
     const { role, regex } = filter;
     const roleRegex = new RegExp(role || "", "i");
     const globalRegex = new RegExp(regex || "", "i");
-    const query = User.collection
-        .find({
-            $and: [
-                { role: { $regex: roleRegex } },
-                {
-                    $or: [
-                        { username: { $regex: globalRegex } },
-                        { displayname: { $regex: globalRegex } },
-                        { email: { $regex: globalRegex } },
-                        { phonenumber: { $regex: globalRegex } }
-                    ]
-                }
-            ]
-        })
-        .sort({ modifiedDate: -1 });
+    const query = {
+        $and: [
+            { role: { $regex: roleRegex } },
+            {
+                $or: [
+                    { username: { $regex: globalRegex } },
+                    { displayname: { $regex: globalRegex } },
+                    { email: { $regex: globalRegex } },
+                    { phonenumber: { $regex: globalRegex } }
+                ]
+            }
+        ]
+    };
 
-    const total = await query.count();
-    const userList = await query.skip(offset).limit(limit).toArray();
+    const result = await User.collection.find(query).sort({ modifiedDate: -1 });
+    const total = await result.count();
+    const userList = await result.skip(offset).limit(limit).toArray();
 
     if (!total || !userList || userList.length === 0) {
         return {

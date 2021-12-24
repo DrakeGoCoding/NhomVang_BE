@@ -43,7 +43,7 @@ const invoiceSchema = new mongoose.Schema({
     },
     paymentStatus: {
         type: String,
-        enum: ["pending", "done"],
+        enum: ["pending", "done", "cancel"],
         default: "pending"
     },
     paymentId: { type: String },
@@ -69,8 +69,7 @@ const invoiceSchema = new mongoose.Schema({
                 timestamp: { type: Date, default: Date.now, immutable: true }
             }
         ]
-    },
-    vouchers: [String]
+    }
 });
 
 const Invoice = mongoose.model("Invoice", invoiceSchema);
