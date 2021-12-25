@@ -6,8 +6,7 @@ const { NOT_FOUND_NEWS } = require("@constants/error");
 /**
  * Get all invoices
  * @param {{
- * 		title: String,
- * 		tag: String,
+ * 		tags: String,
  * }} filter
  * @param {Number} limit
  * @param {Number} offset
@@ -50,15 +49,9 @@ const getAllNews = async (filter = {}, limit = 10, offset = 0) => {
         { $project: { total: "$stage1.count", newsList: "$stage2" } }
     ];
 
-    if (filter.tag) {
+    if (filter.tags && filter.tags.length > 0) {
         aggregation.unshift({
-            $match: { tags: { $in: [filter.tag] } }
-        });
-    }
-
-    if (filter.title) {
-        aggregation.unshift({
-            $match: { title: { $regex: new RegExp(filter.title || "", "i") } }
+            $match: { tags: { $in: [...filter.tags.split(",")] } }
         });
     }
 
