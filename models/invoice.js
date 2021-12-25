@@ -73,6 +73,7 @@ const invoiceSchema = new mongoose.Schema({
                     type: String,
                     enum: ["create", "change_status", "cancel"]
                 },
+				nextStatus: String,
                 prevStatus: String,
                 timestamp: { type: Date, default: Date.now, immutable: true }
             }
