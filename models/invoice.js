@@ -18,7 +18,7 @@ const invoiceSchema = new mongoose.Schema({
                     type: String,
                     required: true
                 },
-				thumbnail: String,
+                thumbnail: String,
                 listedPrice: {
                     type: Number,
                     required: true
@@ -52,20 +52,28 @@ const invoiceSchema = new mongoose.Schema({
         enum: ["pending", "in_progress", "delivered", "failed"],
         default: "pending"
     },
+    vouchers: {
+        type: [
+            {
+                type: String
+            }
+        ],
+        default: []
+    },
     createdDate: { type: Date, default: Date.now, immutable: true },
     logs: {
         type: [
             {
+				_id: false,
                 user: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: "User",
+                    type: String,
                     required: true
                 },
                 action: {
                     type: String,
-                    enum: ["change_status", "cancel"]
+                    enum: ["create", "change_status", "cancel"]
                 },
-                nextStatus: String,
+                prevStatus: String,
                 timestamp: { type: Date, default: Date.now, immutable: true }
             }
         ]

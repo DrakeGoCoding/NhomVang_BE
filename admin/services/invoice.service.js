@@ -2,7 +2,7 @@ const Invoice = require("@models/invoice");
 const User = require("@models/user");
 const { responseInvoice } = require("@utils/responsor");
 const AppError = require("@utils/appError");
-const { NOT_FOUND_USER } = require("@constants/error");
+const { NOT_FOUND_USER, NOT_FOUND_INVOICE } = require("@constants/error");
 
 /**
  * Get all invoices
@@ -39,6 +39,7 @@ const getAllInvoices = async (filter = {}, limit = 10, offset = 0) => {
                             paymentMethod: 1,
                             paymentStatus: 1,
                             paymentId: 1,
+                            vouchers: 1,
                             status: 1,
                             createdDate: 1,
                             logs: 1
@@ -79,14 +80,14 @@ const getAllInvoices = async (filter = {}, limit = 10, offset = 0) => {
  * @DrakeGoCoding 12/24/2021
  */
 const getInvoice = async invoiceId => {
-    const invoice = await Invoice.findById(invoiceId);
+    const invoice = await Invoice.findById(invoiceId).populate('user');
     if (!invoice) {
         throw new AppError(404, "fail", NOT_FOUND_INVOICE);
     }
 
     return {
         statusCode: 200,
-        data: responseInvoice(invoice.toJSON())
+        data: { invoice: responseInvoice(invoice.toJSON()) }
     };
 };
 
