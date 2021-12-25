@@ -13,13 +13,12 @@ const getAllInvoices = async (req, res, next) => {
 
 const getInvoice = async (req, res, next) => {
     try {
-        const userId = req.user._id;
         const invoiceId = req.params.invoiceId;
         if (!invoiceId) {
             throw new AppError(400, "fail", MISSING_INVOICE_ID);
         }
 
-        const { statusCode, data } = await invoiceService.getInvoice(userId, invoiceId);
+        const { statusCode, data } = await invoiceService.getInvoice(invoiceId);
         res.status(statusCode).json(data);
     } catch (error) {
         next(error);
