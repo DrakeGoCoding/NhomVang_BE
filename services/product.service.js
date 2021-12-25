@@ -9,7 +9,7 @@ const { NOT_FOUND_PRODUCT } = require("@constants/error");
  * 		hot: Boolean,
  * 		inSlider: Boolean,
  * 		name: String,
- * 		tag: String,
+ * 		tags: String,
  * 		supplier: String,
  * 		minPrice: Number,
  * 		maxPrice: Number
@@ -41,8 +41,8 @@ const getAllProducts = async (filter = {}, limit = 10, offset = 0) => {
             }
         ]
     };
-    if (filter.tag) {
-        query.$and.push({ tags: filter.tag });
+    if (filter.tags) {
+        query.$and.push({ tags: { $in: [...filter.tags.split(",")] } });
     }
     if (typeof filter.hot === "boolean" && filter.hot) {
         query.$and.push({ isHot: filter.hot });
