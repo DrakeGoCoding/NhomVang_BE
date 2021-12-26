@@ -6,6 +6,9 @@ router.use(authenticate);
 router.use(restrictTo("admin"));
 
 router.get("/", invoiceController.getAllInvoices);
-router.get("/:invoiceId", invoiceController.getInvoice);
+router
+	.route("/:invoiceId")
+	.get(invoiceController.getInvoice)
+	.put(invoiceController.updateInvoice);
 
 module.exports = router;

@@ -1,8 +1,10 @@
 const Invoice = require("@models/invoice");
 const User = require("@models/user");
 const { responseInvoice } = require("@utils/responsor");
+const sendEmail = require("../../utils/email/nodemailer");
 const AppError = require("@utils/appError");
-const { NOT_FOUND_USER, NOT_FOUND_INVOICE } = require("@constants/error");
+const { INVALID_INVOICE_ID, INVALID_INVOICE_STATUS, NOT_FOUND_USER, NOT_FOUND_INVOICE } = require("@constants/error");
+const { INVOICE_DELIVER_SUCCESS, INVOICE_CANCEL } = require("@constants/message");
 
 /**
  * Get all invoices
@@ -103,7 +105,69 @@ const getInvoice = async invoiceId => {
     };
 };
 
+/**
+ * Update an invoice by id
+ * @param {String} invoiceId
+ * @param {Invoice} invoice
+ * @DrakeGoCoding 12/26/2021
+ */
+const updateInvoice = async (username, invoiceId, invoice) => {
+    let updatedInvoice = await Invoice.findById(invoiceId).populate("user");
+    if (!updatedInvoice || invoiceId.toString() !== invoice._id.toString()) {
+        throw new AppError(400, "fail", INVALID_INVOICE_ID);
+    }
+
+    if (!["delivered", "failed"].includes(invoice.status)) {
+        throw new AppError(400, "fail", INVALID_INVOICE_STATUS);
+    }
+
+    if (invoice.status === "delivered") {
+        updatedInvoice.logs.push({
+            user: username,
+            action: "change_status",
+            prevStatus: updatedInvoice.status,
+            nextStatus: "delivered"
+        });
+        updatedInvoice.status = "delivered";
+        updatedInvoice.products = invoice.products;
+
+        sendEmail(updatedInvoice.user.email, INVOICE_DELIVER_SUCCESS, "invoiceDeliver.handlebars", {
+            id: updatedInvoice._id.toString(),
+            invoice: updatedInvoice,
+            date: new Date().toDateString()
+        });
+    } else if (invoice.status === "failed") {
+        // refund if paymentStatus is done
+        // if (updatedInvoice.paymentStatus === "done" && updatedInvoice.paymentId) {
+        //     const payment = await getPaymentById(updatedInvoice.paymentId);
+        //     const amount = updatedInvoice.discountTotal || updatedInvoice.total;
+        //     const saleId = payment.transactions[0].related_resources[0].sale.id;
+        //     await refundPayment(saleId, amount);
+        // }
+        updatedInvoice.logs.push({
+            user: username,
+            action: "cancel"
+        });
+        updatedInvoice.status = "failed";
+        updatedInvoice.paymentStatus = "cancel";
+
+        sendEmail(updatedInvoice.user.email, INVOICE_CANCEL, "invoiceCancel.handlebars", {
+            id: updatedInvoice._id.toString(),
+            invoice: updatedInvoice,
+            date: new Date().toDateString()
+        });
+    }
+
+    updatedInvoice = await updatedInvoice.save();
+
+    return {
+        statusCode: 200,
+        data: { status: "success", invoice: responseInvoice(updatedInvoice.toJSON()) }
+    };
+};
+
 module.exports = {
     getAllInvoices,
-    getInvoice
+    getInvoice,
+    updateInvoice
 };
