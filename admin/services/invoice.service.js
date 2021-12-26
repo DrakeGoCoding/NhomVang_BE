@@ -8,6 +8,7 @@ const { NOT_FOUND_USER, NOT_FOUND_INVOICE } = require("@constants/error");
  * Get all invoices
  * @param {{
  * 		user: String,
+ * 		date: String
  * }} filter
  * @param {Number} limit
  * @param {Number} offset
@@ -62,6 +63,17 @@ const getAllInvoices = async (filter = {}, limit = 10, offset = 0) => {
         });
     }
 
+    if (filter.date) {
+        const date = new Date(filter.date);
+        date.setUTCHours(0, 0, 0, 0);
+        const nextDate = new Date(filter.date);
+        nextDate.setDate(date.getDate() + 1);
+        nextDate.setUTCHours(0, 0, 0, 0);
+        aggregation.unshift({
+            $match: { createdDate: { $gte: date, $lt: nextDate } }
+        });
+    }
+
     const query = await Invoice.collection.aggregate(aggregation);
     const data = (await query.toArray())[0];
 
@@ -80,7 +92,7 @@ const getAllInvoices = async (filter = {}, limit = 10, offset = 0) => {
  * @DrakeGoCoding 12/24/2021
  */
 const getInvoice = async invoiceId => {
-    const invoice = await Invoice.findById(invoiceId).populate('user');
+    const invoice = await Invoice.findById(invoiceId).populate("user");
     if (!invoice) {
         throw new AppError(404, "fail", NOT_FOUND_INVOICE);
     }
