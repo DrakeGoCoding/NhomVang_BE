@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <style>
+            table { border-spacing: 0; text-align: center; } th, td { padding: 8px 12px; text-align: left; } th {
+            position: sticky; top: 0; border-right: 1px solid #c7c7c7; border-bottom: 1px solid #c7c7c7; min-height:
+            40px; height: 40px; background-color: #4caf50; color: #ffffff; font-size: 16px; } td { height: 40px;
+            border-bottom: 1px solid #c7c7c7; border-right: 1px solid #c7c7c7; font-size: 14px; } tbody tr
+            td:first-child { border-left: 1px solid #c7c7c7; } .invoice-info { border: 1px dotted black; width:
+            max-content; padding: 8px 12px; } .text-left { text-align: left; } .text-right { text-align: right; }
+            .font-bold { font-weight: bold; } .font-big { font-size: 1.25rem; }
+        </style>
+    </head>
+
+    <body>
+        <h1>Hello {{invoice.user.displayname}}</h1>
+        <h3>We are sorry to announce that your purchase has been cancelled.</h3>
+        <p>Refund process will be in action immediately if we received your payment.</p>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th class="text-right">Price</th>
+                        <th class="text-right">Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each invoice.products}}
+                        <tr>
+                            <td>{{this.name}}</td>
+                            {{#if this.discountPrice}}
+                                <td class="text-right">${{this.discountPrice}}</td>
+                            {{else}}
+                                <td class="text-right">${{this.listedPrice}}</td>
+                            {{/if}}
+                            <td class="text-right">{{this.quantity}}</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            <p class="font-big"><span class="font-bold">Total:</span> ${{invoice.discountTotal}}</p>
+        </div>
+        <p>This email message will serve as your receipt.</p>
+        <div class="invoice-info">
+            <p>Invoice: {{id}}</p>
+            <p>Date issued: {{date}}</p>
+        </div>
+        <p>This email message was auto-generated. Please do not respond.</p>
+    </body>
+</html>

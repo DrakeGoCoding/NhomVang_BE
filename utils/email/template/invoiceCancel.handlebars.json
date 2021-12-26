@@ -1,0 +1,29 @@
+{
+    "id": "61c700351e2f2edde14516d5",
+    "invoice": {
+        "_id": "61c700351e2f2edde14516d5",
+        "user": {
+            "displayname": "drakegonuts"
+        },
+        "products": [
+            {
+                "name": "Vé tháng hăng say công việc",
+                "quantity": 2,
+                "listedPrice": 120.39,
+                "discountPrice": 0,
+                "vouchers": ["TEST01", "TEST02"]
+            },
+            {
+                "name": "Thẻ Mini Golf Card",
+                "quantity": 1,
+                "listedPrice": 709.19,
+                "discountPrice": 0,
+                "vouchers": ["MGC01"]
+            }
+        ],
+        "total": 240.78,
+        "discountTotal": 240.78,
+        "paymentMethod": "paypal"
+    },
+    "date": "Mon Dec 27 2021"
+}

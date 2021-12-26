@@ -121,7 +121,7 @@ const payInvoice = async (userId, invoiceId, paymentMethod) => {
  * @param {String} invoiceId
  */
 const cancelInvoice = async (userId, invoiceId) => {
-    const invoice = await Invoice.findOne({ _id: invoiceId, user: userId });
+    const invoice = await Invoice.findOne({ _id: invoiceId, user: userId }).populate("user");
     if (!invoice) {
         throw new AppError(404, "fail", NOT_FOUND_INVOICE);
     }
@@ -136,9 +136,9 @@ const cancelInvoice = async (userId, invoiceId) => {
     await refundPayment(saleId, amount);
 
     invoice.status = "failed";
-    invoice.paymentMethod = "cancel";
+    invoice.paymentStatus = "cancel";
     invoice.logs.push({
-        user: userId,
+        user: invoice.user.username,
         action: "cancel"
     });
     await invoice.save();
@@ -176,12 +176,13 @@ const payWithPaypalSuccess = async (paymentId, payerId) => {
     invoice.paymentMethod = "paypal";
     invoice.paymentStatus = "done";
     invoice.paymentId = paymentId;
-    invoice.status = "in_progress";
     invoice.logs.push({
         user: invoice.user,
         action: "change_status",
-        nextStatus: invoice.status
+        prevStatus: invoice.status,
+		nextStatus: "in_progress"
     });
+    invoice.status = "in_progress";
     await invoice.save();
 
     return {

@@ -6,6 +6,10 @@ const morgan = require("morgan");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
+const handlebars = require("handlebars");
+const { engine } = require("express-handlebars");
+const { allowInsecurePrototypeAccess } = require("@handlebars/allow-prototype-access");
+
 const { queryParser } = require("express-query-parser");
 
 require("module-alias/register");
@@ -28,6 +32,13 @@ app.use(express.urlencoded({ limit: "1gb", extended: true }));
 app.use(mongoSanitize());
 app.use(xss());
 app.use(hpp());
+app.engine(
+    "handlebars",
+    engine({
+        handlebars: allowInsecurePrototypeAccess(handlebars)
+    })
+);
+app.set("view engine", "handlebars");
 app.use(
     queryParser({
         parseNull: true,
