@@ -56,21 +56,6 @@ const invoiceSchema = new mongoose.Schema({
         enum: ["pending", "in_progress", "delivered", "failed"],
         default: "pending"
     },
-    vouchers: {
-        type: [
-            {
-                _id: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: "Product",
-                    required: true
-                },
-                codes: {
-                    type: [String],
-                    default: []
-                }
-            }
-        ]
-    },
     createdDate: { type: Date, default: Date.now, immutable: true },
     logs: {
         type: [
