@@ -30,6 +30,10 @@ const invoiceSchema = new mongoose.Schema({
                 quantity: {
                     type: Number,
                     required: true
+                },
+                vouchers: {
+                    type: [String],
+                    default: []
                 }
             }
         ],
@@ -52,19 +56,11 @@ const invoiceSchema = new mongoose.Schema({
         enum: ["pending", "in_progress", "delivered", "failed"],
         default: "pending"
     },
-    vouchers: {
-        type: [
-            {
-                type: String
-            }
-        ],
-        default: []
-    },
     createdDate: { type: Date, default: Date.now, immutable: true },
     logs: {
         type: [
             {
-				_id: false,
+                _id: false,
                 user: {
                     type: String,
                     required: true
@@ -73,7 +69,7 @@ const invoiceSchema = new mongoose.Schema({
                     type: String,
                     enum: ["create", "change_status", "cancel"]
                 },
-				nextStatus: String,
+                nextStatus: String,
                 prevStatus: String,
                 timestamp: { type: Date, default: Date.now, immutable: true }
             }

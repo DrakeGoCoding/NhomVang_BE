@@ -87,6 +87,7 @@ const createInvoice = async (userId, username, products) => {
         products,
         total: parseFloat(total.toFixed(2)),
         discountTotal: parseFloat(discountTotal.toFixed(2)),
+        vouchers,
         logs: [
             {
                 user: username,
