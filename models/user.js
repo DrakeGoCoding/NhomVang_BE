@@ -51,6 +51,10 @@ const userSchema = new mongoose.Schema({
         district: { type: String },
         detail: { type: String }
     },
+	isSubcribing: {
+		type: Boolean,
+		default: true
+	},
     createdDate: { type: Date, default: Date.now, immutable: true },
     modifiedDate: { type: Date, default: Date.now }
 });
