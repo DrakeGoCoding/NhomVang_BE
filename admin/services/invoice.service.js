@@ -138,12 +138,12 @@ const updateInvoice = async (username, invoiceId, invoice) => {
         });
     } else if (invoice.status === "failed") {
         // refund if paymentStatus is done
-        // if (updatedInvoice.paymentStatus === "done" && updatedInvoice.paymentId) {
-        //     const payment = await getPaymentById(updatedInvoice.paymentId);
-        //     const amount = updatedInvoice.discountTotal || updatedInvoice.total;
-        //     const saleId = payment.transactions[0].related_resources[0].sale.id;
-        //     await refundPayment(saleId, amount);
-        // }
+        if (updatedInvoice.paymentStatus === "done" && updatedInvoice.paymentId) {
+            const payment = await getPaymentById(updatedInvoice.paymentId);
+            const amount = updatedInvoice.discountTotal || updatedInvoice.total;
+            const saleId = payment.transactions[0].related_resources[0].sale.id;
+            await refundPayment(saleId, amount);
+        }
         updatedInvoice.logs.push({
             user: username,
             action: "cancel"
