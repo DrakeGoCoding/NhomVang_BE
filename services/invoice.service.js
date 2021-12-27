@@ -171,12 +171,12 @@ const payWithPaypalSuccess = async (paymentId, payerId) => {
     const payment = await executePayment(paymentId, payerId);
     const invoiceId = payment.transactions[0].invoice_number;
 
-    const invoice = await Invoice.findById(invoiceId);
+    const invoice = await Invoice.findById(invoiceId).populate("user");
     invoice.paymentMethod = "paypal";
     invoice.paymentStatus = "done";
     invoice.paymentId = paymentId;
     invoice.logs.push({
-        user: invoice.user,
+        user: invoice.user.username,
         action: "change_status",
         prevStatus: invoice.status,
 		nextStatus: "in_progress"
