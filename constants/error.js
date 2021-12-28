@@ -24,6 +24,7 @@ module.exports = {
     MISSING_INVOICE_ID: "Please provide invoice id",
     MISSING_OLD_PASSWORD: "Please provide your current password.",
     MISSING_NEWS_INPUT: "Please provide all required fields for news.",
+	MISSING_NEWSLETTER_CONTENT: "Please provide content for newsletter.",
     MISSING_PAYMENT_METHOD: "Please provide payment method.",
     MISSING_PRODUCT_INPUT: "Please provide all required fields for product",
     MISSING_USER_INPUT: "Please provide all required fields for user.",
