@@ -27,10 +27,16 @@ const responseInvoice = invoice => {
     return rest;
 };
 
+const responseNewsletter = newsletter => {
+    const { __v, ...rest } = newsletter;
+    return rest;
+};
+
 module.exports = {
     responseUser,
     responseNews,
     responseProduct,
     responseCart,
-    responseInvoice
+    responseInvoice,
+    responseNewsletter
 };

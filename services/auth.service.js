@@ -50,7 +50,7 @@ const register = async (username, password) => {
     const hash = bcrypt.hashSync(password, salt);
 
     // save user
-    const user = new User({ username, hash, salt });
+    const user = new User({ username, hash, salt, isSubcribing: true });
     await user.save();
 
     // generate a new token

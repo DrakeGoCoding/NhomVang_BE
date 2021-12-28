@@ -4,6 +4,7 @@ const newsRoute = require("@admin/routes/news.route");
 const userRoute = require("@admin/routes/user.route");
 const productRoute = require("@admin/routes/product.route");
 const invoiceRoute = require("@admin/routes/invoice.route");
+const newsletterRoute = require("@admin/routes/newsletter.route");
 const { authenticate, restrictTo } = require("@middlewares/auth.middleware");
 
 const admin = express();
@@ -17,5 +18,6 @@ admin.use("/news", newsRoute);
 admin.use("/users", userRoute);
 admin.use("/products", productRoute);
 admin.use("/invoices", invoiceRoute);
+admin.use("/newsletter", newsletterRoute);
 
 module.exports = admin;
