@@ -1,7 +1,7 @@
 const { decode } = require("html-entities");
 const Newsletter = require("@models/newsletter");
 const User = require("@models/user");
-const sendEmail = require("@utils/email/nodemailer");
+const sendEmail = require("@utils/nodemailer");
 const { responseNewsletter } = require("@utils/responsor");
 
 /**
