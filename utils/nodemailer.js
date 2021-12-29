@@ -7,7 +7,7 @@ const sendEmail = async (email, subject, template, payload) => {
     if (!email) return;
 
     try {
-        const source = fs.readFileSync(path.join(__dirname, `./template/${template}`), "utf-8");
+        const source = fs.readFileSync(path.join(__dirname, `../templates/${template}`), "utf-8");
         const compiledTemplate = handlebars.compile(source);
 
         const mailOptions = {
