@@ -25,7 +25,6 @@ const login = async (username, password) => {
         statusCode: 200,
         data: {
             token,
-            stripeKey: process.env.STRIPE_PUBLIC,
             user: responseUser(user.toJSON())
         }
     };
@@ -64,9 +63,7 @@ const register = async (username, password) => {
         statusCode: 201,
         data: {
             token,
-            stripeKey: process.env.STRIPE_PUBLIC,
-            user: responseUser(user.toJSON()),
-            cart: responseCart(cart.toJSON())
+            user: responseUser(user.toJSON())
         }
     };
 };
@@ -101,7 +98,11 @@ const updateUser = async user => {
         hash = bcrypt.hashSync(password, salt);
     }
 
-    updatedUser = Object.assign(updatedUser, { ...user, hash, salt });
+    updatedUser = Object.assign(updatedUser, {
+		...user,
+		hash: hash || updatedUser.hash,
+		salt: salt || updatedUser.salt 
+	});
     updatedUser = await updatedUser.save();
 
     return {
