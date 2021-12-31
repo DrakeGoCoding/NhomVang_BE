@@ -1,4 +1,5 @@
 const invoiceService = require("@services/invoice.service");
+const { isValidId } = require("@utils/mongoose");
 const AppError = require("@utils/appError");
 const {
     MISSING_INVOICE_PRODUCTS,
@@ -23,6 +24,10 @@ const getInvoice = async (req, res, next) => {
         const invoiceId = req.params.invoiceId;
         if (!invoiceId) {
             throw new AppError(400, "fail", MISSING_INVOICE_ID);
+        }
+
+		if (!isValidId(invoiceId)) {
+            throw new AppError(400, "fail", INVALID_ID);
         }
 
         const { statusCode, data } = await invoiceService.getInvoice(userId, invoiceId);
@@ -64,6 +69,10 @@ const payInvoice = async (req, res, next) => {
             throw new AppError(400, "fail", MISSING_INVOICE_ID);
         }
 
+		if (!isValidId(invoiceId)) {
+            throw new AppError(400, "fail", INVALID_ID);
+        }
+
         if (!paymentMethod) {
             throw new AppError(400, "fail", MISSING_PAYMENT_METHOD);
         }
@@ -83,6 +92,10 @@ const cancelInvoice = async (req, res, next) => {
             throw new AppError(400, "fail", MISSING_INVOICE_ID);
         }
 
+		if (!isValidId(invoiceId)) {
+            throw new AppError(400, "fail", INVALID_ID);
+        }
+
         const { statusCode, data } = await invoiceService.cancelInvoice(userId, invoiceId);
         res.status(statusCode).json(data);
     } catch (error) {
@@ -96,6 +109,10 @@ const payWithPaypal = async (req, res, next) => {
         const invoiceId = req.params.invoiceId;
         if (!invoiceId) {
             throw new AppError(400, "fail", MISSING_INVOICE_ID);
+        }
+
+		if (!isValidId(invoiceId)) {
+            throw new AppError(400, "fail", INVALID_ID);
         }
 
         const { statusCode, data } = await invoiceService.payWithPaypal(userId, invoiceId);
@@ -130,6 +147,10 @@ const payWithStripe = async (req, res, next) => {
         const invoiceId = req.params.invoiceId;
         if (!invoiceId) {
             throw new AppError(400, "fail", MISSING_INVOICE_ID);
+        }
+
+		if (!isValidId(invoiceId)) {
+            throw new AppError(400, "fail", INVALID_ID);
         }
 
         const { statusCode, data } = await invoiceService.payWithStripe(userId, invoiceId);

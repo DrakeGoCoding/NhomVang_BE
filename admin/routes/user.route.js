@@ -8,4 +8,6 @@ router
     .put(userController.updateUser)
     .delete(userController.deleteUser);
 
+router.get("/count", userController.countUser);
+
 module.exports = router;

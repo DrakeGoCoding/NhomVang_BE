@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const User = require("@models/user");
+const User = require("../../models/user");
 const { responseUser } = require("@utils/responsor");
 const AppError = require("@utils/appError");
 const { NOT_FOUND_USER, FOUND_USER, FORBIDDEN } = require("@constants/error");
@@ -132,9 +132,36 @@ const deleteUser = async username => {
     };
 };
 
+/**
+ * Count the number of users with filter
+ * @param {{
+ * 		subscribe: Boolean
+ * }} filter;
+ * @returns
+ */
+const countUser = async filter => {
+    const query = { $and: [{ role: "user" }] };
+    if (filter.subscribe === true) {
+        query.$and.push({ email: { $exists: true } }, { isSubscribing: { $eq: true } });
+    }
+    const result = await User.collection.find(query).project({
+        _id: 0,
+        username: 1
+    });
+    const userList = await result.map(record => record.username).toArray();
+    return {
+        statusCode: 200,
+        data: {
+            userList,
+			count: userList.length
+        }
+    };
+};
+
 module.exports = {
     getAllUsers,
     createUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    countUser
 };
