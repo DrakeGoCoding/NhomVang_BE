@@ -70,9 +70,20 @@ const deleteUser = async (req, res, next) => {
     }
 };
 
+const countUser = async (req, res, next) => {
+    try {
+		const filter = req.query;
+        const { statusCode, data } = await userService.countUser(filter);
+		res.status(statusCode).json(data);
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     getAllUsers,
     createUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    countUser
 };

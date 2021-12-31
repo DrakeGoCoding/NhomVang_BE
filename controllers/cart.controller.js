@@ -1,4 +1,5 @@
 const cartService = require("@services/cart.service");
+const { isValidId } = require("@utils/mongoose");
 const AppError = require("@utils/appError");
 const { INVALID_CART_ITEM_QUANTITY, MISSING_CART_ITEM_ID, MISSING_CART_ITEM_QUANTITY } = require("@constants/error");
 
@@ -19,6 +20,10 @@ const addItem = async (req, res, next) => {
 
         if (!_id) {
             throw new AppError(400, "fail", MISSING_CART_ITEM_ID);
+        }
+
+        if (!isValidId(_id)) {
+            throw new AppError(400, "fail", INVALID_ID);
         }
 
         if (quantity == null) {
@@ -45,6 +50,10 @@ const removeItem = async (req, res, next) => {
             throw new AppError(400, "fail", MISSING_CART_ITEM_ID);
         }
 
+        if (!isValidId(_id)) {
+            throw new AppError(400, "fail", INVALID_ID);
+        }
+
         const { statusCode, data } = await cartService.removeItem(userId, _id);
         res.status(statusCode).json(data);
     } catch (error) {
@@ -59,6 +68,10 @@ const updateItem = async (req, res, next) => {
 
         if (!_id) {
             throw new AppError(400, "fail", MISSING_CART_ITEM_ID);
+        }
+
+        if (!isValidId(_id)) {
+            throw new AppError(400, "fail", INVALID_ID);
         }
 
         if (quantity == null) {
