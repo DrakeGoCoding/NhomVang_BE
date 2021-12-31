@@ -1,4 +1,4 @@
-const transporter = require("@configs/nodemailer");
+const { transporter } = require("@configs");
 const handlebars = require("handlebars");
 const fs = require("fs");
 const path = require("path");
@@ -15,9 +15,9 @@ const sendEmail = async (email, subject, template, payload) => {
             to: email,
             subject: subject,
             html: compiledTemplate(payload, {
-				allowProtoPropertiesByDefault: true,
-				allowProtoMethodsByDefault: true
-			})
+                allowProtoPropertiesByDefault: true,
+                allowProtoMethodsByDefault: true
+            })
         };
 
         const info = await transporter.sendMail(mailOptions);
