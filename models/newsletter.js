@@ -1,12 +1,15 @@
 const mongoose = require("mongoose");
 
 const newsletterSchema = new mongoose.Schema({
+	sender: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "User"
+	},
     subject: String,
     content: {
         type: String,
         required: true
     },
-    users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     createdDate: { type: Date, default: Date.now, immutable: true }
 });
 

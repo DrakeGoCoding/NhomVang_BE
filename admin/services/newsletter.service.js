@@ -55,11 +55,12 @@ const getNewsletter = async id => {
 
 /**
  * Send newsletter to subscribers' email
+ * @param {String} senderId
  * @param {String} subject
  * @param {String} content
  * @DrakeGoCoding 12/28/2021
  */
-const sendNewsletter = async (subject = "", content) => {
+const sendNewsletter = async (senderId, subject = "", content) => {
     const query = {
         role: "user",
         isSubscribing: true
@@ -74,6 +75,7 @@ const sendNewsletter = async (subject = "", content) => {
     });
 
     const newsletter = await Newsletter.create({
+        sender: senderId,
         subject,
         content,
         users: subscribers
@@ -82,6 +84,7 @@ const sendNewsletter = async (subject = "", content) => {
     return {
         statusCode: 200,
         data: {
+            status: "success",
             newsletter: responseNewsletter(newsletter.toJSON())
         }
     };
