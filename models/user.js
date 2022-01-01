@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
     },
     photourl: {
         type: String,
-        validate: [validator.isURL, INVALID_PHOTOURL]
+        // validate: [validator.isURL, INVALID_PHOTOURL]
     },
     gender: {
         type: String,
