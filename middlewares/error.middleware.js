@@ -5,7 +5,7 @@ const handleGlobalError = (err, req, res, next) => {
     err.status = err.status || "error";
     err.message = err.message || SYSTEM_ERROR;
 
-	console.log(err);
+    console.log(err);
 
     const data = Object.assign(
         {},

@@ -179,7 +179,7 @@ const payWithPaypalSuccess = async (paymentId, payerId) => {
         user: invoice.user.username,
         action: "change_status",
         prevStatus: invoice.status,
-		nextStatus: "in_progress"
+        nextStatus: "in_progress"
     });
     invoice.status = "in_progress";
     await invoice.save();

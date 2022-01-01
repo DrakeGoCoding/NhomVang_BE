@@ -5,7 +5,7 @@ const invoiceSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
-		immutable: true
+        immutable: true
     },
     products: {
         type: [

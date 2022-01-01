@@ -1,8 +1,6 @@
 const { stripe } = require("@configs");
 
-const createPayment = (data) => {
-	
-};
+const createPayment = data => {};
 
 module.exports = {
     createPayment

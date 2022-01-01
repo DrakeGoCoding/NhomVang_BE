@@ -7,7 +7,7 @@ const newsletterSchema = new mongoose.Schema({
         required: true
     },
     users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-	createdDate: { type: Date, default: Date.now, immutable: true },
+    createdDate: { type: Date, default: Date.now, immutable: true }
 });
 
 const Newsletter = mongoose.model("Newsletter", newsletterSchema);
