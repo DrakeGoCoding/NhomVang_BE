@@ -1,7 +1,7 @@
 const invoiceService = require("@admin/services/invoice.service");
 const { isValidId } = require("@utils/mongoose");
 const AppError = require("@utils/appError");
-const { MISSING_INVOICE_ID, MISSING_INVOICE_DATA } = require("@constants/error");
+const { INVALID_ID, MISSING_INVOICE_ID, MISSING_INVOICE_DATA } = require("@constants/error");
 
 const getAllInvoices = async (req, res, next) => {
     try {
@@ -39,7 +39,7 @@ const updateInvoice = async (req, res, next) => {
             throw new AppError(400, "fail", MISSING_INVOICE_ID);
         }
 
-		if (!isValidId(invoiceId)) {
+        if (!isValidId(invoiceId)) {
             throw new AppError(400, "fail", INVALID_ID);
         }
 
