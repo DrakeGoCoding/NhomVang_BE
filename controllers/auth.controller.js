@@ -46,7 +46,7 @@ const updateUser = async (req, res, next) => {
         let user = req.body.user;
 
         user = Object.assign(user, {
-			username: req.user.username,
+            username: req.user.username,
             hash: undefined,
             salt: undefined,
             role: undefined,

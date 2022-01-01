@@ -53,7 +53,7 @@ const executePayment = (paymentId, payerId) => {
     return new Promise(function (resolve, reject) {
         paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
             if (error) {
-				const { httpStatusCode, message, error_description } = error.response;
+                const { httpStatusCode, message, error_description } = error.response;
                 reject(new AppError(httpStatusCode, "fail", error_description || message));
             } else {
                 resolve(payment);
@@ -63,21 +63,21 @@ const executePayment = (paymentId, payerId) => {
 };
 
 const refundPayment = (saleId, amount) => {
-	const refund_details = {
-		amount: {
-			currency: "USD",
-			total: amount.toString()
-		}
-	}
+    const refund_details = {
+        amount: {
+            currency: "USD",
+            total: amount.toString()
+        }
+    };
     return new Promise(function (resolve, reject) {
-        paypal.sale.refund(saleId, refund_details, function(error, refund) {
-			if (error) {
-				const { httpStatusCode, message, error_description } = error.response;
+        paypal.sale.refund(saleId, refund_details, function (error, refund) {
+            if (error) {
+                const { httpStatusCode, message, error_description } = error.response;
                 reject(new AppError(httpStatusCode, "fail", error_description || message));
             } else {
                 resolve(refund);
             }
-		})
+        });
     });
 };
 

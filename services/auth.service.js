@@ -99,10 +99,10 @@ const updateUser = async user => {
     }
 
     updatedUser = Object.assign(updatedUser, {
-		...user,
-		hash: hash || updatedUser.hash,
-		salt: salt || updatedUser.salt 
-	});
+        ...user,
+        hash: hash || updatedUser.hash,
+        salt: salt || updatedUser.salt
+    });
     updatedUser = await updatedUser.save();
 
     return {

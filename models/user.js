@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ["admin", "user"],
         default: "user",
-		immutable: true
+        immutable: true
     },
     displayname: {
         type: String,
@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema({
         district: { type: String },
         detail: { type: String }
     },
-	isSubscribing: Boolean,
+    isSubscribing: Boolean,
     createdDate: { type: Date, default: Date.now, immutable: true },
     modifiedDate: { type: Date, default: Date.now }
 });

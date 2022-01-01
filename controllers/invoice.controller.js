@@ -2,7 +2,7 @@ const invoiceService = require("@services/invoice.service");
 const { isValidId } = require("@utils/mongoose");
 const AppError = require("@utils/appError");
 const {
-	INVALID_ID,
+    INVALID_ID,
     MISSING_INVOICE_PRODUCTS,
     INVALID_INVOICE_PRODUCTS,
     MISSING_INVOICE_ID,
@@ -27,7 +27,7 @@ const getInvoice = async (req, res, next) => {
             throw new AppError(400, "fail", MISSING_INVOICE_ID);
         }
 
-		if (!isValidId(invoiceId)) {
+        if (!isValidId(invoiceId)) {
             throw new AppError(400, "fail", INVALID_ID);
         }
 
@@ -70,7 +70,7 @@ const payInvoice = async (req, res, next) => {
             throw new AppError(400, "fail", MISSING_INVOICE_ID);
         }
 
-		if (!isValidId(invoiceId)) {
+        if (!isValidId(invoiceId)) {
             throw new AppError(400, "fail", INVALID_ID);
         }
 
@@ -93,7 +93,7 @@ const cancelInvoice = async (req, res, next) => {
             throw new AppError(400, "fail", MISSING_INVOICE_ID);
         }
 
-		if (!isValidId(invoiceId)) {
+        if (!isValidId(invoiceId)) {
             throw new AppError(400, "fail", INVALID_ID);
         }
 
@@ -112,7 +112,7 @@ const payWithPaypal = async (req, res, next) => {
             throw new AppError(400, "fail", MISSING_INVOICE_ID);
         }
 
-		if (!isValidId(invoiceId)) {
+        if (!isValidId(invoiceId)) {
             throw new AppError(400, "fail", INVALID_ID);
         }
 
@@ -150,7 +150,7 @@ const payWithStripe = async (req, res, next) => {
             throw new AppError(400, "fail", MISSING_INVOICE_ID);
         }
 
-		if (!isValidId(invoiceId)) {
+        if (!isValidId(invoiceId)) {
             throw new AppError(400, "fail", INVALID_ID);
         }
 

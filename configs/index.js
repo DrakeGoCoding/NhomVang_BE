@@ -6,6 +6,6 @@ const transporter = require("./nodemailer");
 module.exports = {
     cloudinary,
     paypal,
-	stripe,
-	transporter
+    stripe,
+    transporter
 };
