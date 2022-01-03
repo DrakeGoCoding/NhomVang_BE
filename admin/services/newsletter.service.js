@@ -1,5 +1,5 @@
 const { decode } = require("html-entities");
-const Newsletter = require("@models/newsletter");
+const Newsletter = require("../../models/newsletter");
 const User = require("@models/user");
 const sendEmail = require("@utils/nodemailer");
 const { responseNewsletter } = require("@utils/responsor");
@@ -13,26 +13,45 @@ const { NOT_FOUND_NEWSLETTER } = require("@constants/error");
  * @DrakeGoCoding 12/28/2021
  */
 const getAllNewsletters = async (limit = 10, offset = 0) => {
-    const query = {};
-    const result = await Newsletter.collection.find(query).sort({ createdDate: -1 });
-    const total = await result.count();
-    const newsletterList = await result.skip(offset).limit(limit).toArray();
-
-    if (!total || !newsletterList || newsletterList.length === 0) {
-        return {
-            statusCode: 200,
-            data: {
-                newsletterList: [],
-                total: 0
+    const aggregation = [
+        { $sort: { createdDate: -1 } },
+        {
+            $lookup: {
+                from: "users",
+                localField: "sender",
+                foreignField: "_id",
+                as: "sender"
             }
-        };
-    }
+        },
+        {
+            $facet: {
+                stage1: [{ $group: { _id: null, count: { $sum: 1 } } }],
+                stage2: [
+                    { $skip: offset },
+                    { $limit: limit },
+                    {
+                        $project: {
+                            sender: { $arrayElemAt: ["$sender", 0] },
+                            subject: 1,
+                            content: 1,
+                            createdDate: 1
+                        }
+                    }
+                ]
+            }
+        },
+        { $unwind: "$stage1" },
+        { $project: { total: "$stage1.count", newsletterList: "$stage2" } }
+    ];
+
+    const query = await Newsletter.collection.aggregate(aggregation);
+    const data = (await query.toArray())[0];
 
     return {
         statusCode: 200,
         data: {
-            newsletterList: newsletterList.map(newsletter => responseNewsletter(newsletter)),
-            total
+            ...data,
+            newsletterList: data ? data.newsletterList.map(newsletter => responseNewsletter(newsletter)) : []
         }
     };
 };
