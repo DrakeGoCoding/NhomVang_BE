@@ -30,7 +30,32 @@ const productSchema = new mongoose.Schema({
         default: []
     },
     createdDate: { type: Date, default: Date.now, immutable: true },
-    modifiedDate: { type: Date, default: Date.now }
+    modifiedDate: { type: Date, default: Date.now, immutable: true },
+    logs: {
+        type: [
+            {
+                _id: false,
+                user: {
+                    type: String,
+                    required: true
+                },
+                action: {
+                    type: String,
+                    enum: ["create", "update"]
+                },
+                details: [
+                    {
+						_id: false,
+                        field: String,
+						prevValue: mongoose.Schema.Types.Mixed,
+                        nextValue: mongoose.Schema.Types.Mixed
+                    }
+                ],
+                timestamp: { type: Date, default: Date.now, immutable: true }
+            }
+        ],
+		default: []
+    }
 });
 
 productSchema.pre(

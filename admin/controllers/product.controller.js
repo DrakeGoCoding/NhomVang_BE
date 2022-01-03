@@ -4,6 +4,7 @@ const { MISSING_PRODUCT_INPUT, UNDEFINED_ROUTE } = require("@constants/error");
 
 const createProduct = async (req, res, next) => {
     try {
+		const creator = req.user.username;
         let product = req.body.product;
         if (!product) {
             throw new AppError(400, "fail", MISSING_PRODUCT_INPUT);
@@ -20,7 +21,7 @@ const createProduct = async (req, res, next) => {
             modifiedDate: Date.now()
         });
 
-        const { statusCode, data } = await productService.createProduct(product);
+        const { statusCode, data } = await productService.createProduct(creator, product);
         res.status(statusCode).json(data);
     } catch (error) {
         next(error);
@@ -29,6 +30,7 @@ const createProduct = async (req, res, next) => {
 
 const updateProduct = async (req, res, next) => {
     try {
+		const updater = req.user.username;
         const { slug } = req.params;
         if (!slug) {
             throw new AppError(400, "fail", UNDEFINED_ROUTE);
@@ -47,10 +49,11 @@ const updateProduct = async (req, res, next) => {
         product = Object.assign(product, {
             slug: undefined,
             createdDate: undefined,
-            modifiedDate: Date.now()
+            modifiedDate: undefined,
+			logs: undefined
         });
 
-        const { statusCode, data } = await productService.updateProduct(slug, product);
+        const { statusCode, data } = await productService.updateProduct(updater, slug, product);
         res.status(statusCode).json(data);
     } catch (error) {
         next(error);

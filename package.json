@@ -6,7 +6,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node server.js",
-        "dev": "nodemon node server.js",
+        "dev": "nodemon --inspect server.js",
         "prettier": "prettier --check \"./**/(**.jsx|*.js|*.scss|*.css)\"",
         "prettier:fix": "prettier --write \"./**/(**.jsx|*.js|*.scss|*.css)\""
     },
@@ -25,6 +25,7 @@
         "bcrypt": "^5.0.1",
         "cloudinary": "^1.27.1",
         "cors": "^2.8.5",
+        "deep-diff": "^1.0.2",
         "dotenv": "^10.0.0",
         "express": "^4.17.1",
         "express-handlebars": "^6.0.2",

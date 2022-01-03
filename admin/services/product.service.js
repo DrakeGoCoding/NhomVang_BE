@@ -1,3 +1,4 @@
+const { diff } = require("deep-diff");
 const Product = require("@models/product");
 const AppError = require("@utils/appError");
 const { responseProduct } = require("@utils/responsor");
@@ -5,11 +6,20 @@ const { NOT_FOUND_PRODUCT } = require("@constants/error");
 
 /**
  * Create a new product
+ * @param {String} creator
  * @param {Product} product
  * @DrakeGoCoding 12/01/2021
  */
-const createProduct = async product => {
-    const createdProduct = await Product.create(product);
+const createProduct = async (creator, product) => {
+    const createdProduct = await Product.create({
+        ...product,
+        logs: [
+            {
+                user: creator,
+                action: "create"
+            }
+        ]
+    });
     return {
         statusCode: 201,
         data: { product: responseProduct(createdProduct.toJSON()) }
@@ -18,14 +28,40 @@ const createProduct = async product => {
 
 /**
  * Update a product
+ * @param {String} updater
+ * @param {String} slug
  * @param {Product} product
  * @DrakeGoCoding 12/01/2021
  */
-const updateProduct = async (slug, product) => {
-    const updatedProduct = await Product.findOneAndUpdate({ slug }, product, { new: true });
+const updateProduct = async (updater, slug, product) => {
+    let updatedProduct = await Product.findOneAndUpdate({ slug }, product);
     if (!updatedProduct) {
         throw new AppError(404, "fail", NOT_FOUND_PRODUCT);
     }
+
+    const lhs = Object.assign(updatedProduct.toJSON(), {
+        _id: undefined,
+        __v: undefined,
+        slug: undefined,
+        createdDate: undefined,
+        modifiedDate: undefined,
+        logs: undefined
+    });
+    const rhs = { ...product, _id: undefined, __v: undefined };
+    const diffs = diff(lhs, rhs);
+    if (diffs) {
+        updatedProduct.logs.push({
+            user: updater,
+            action: "update",
+            details: diffs.map(diff => ({
+                field: diff.path[0],
+                prevValue: lhs[diff.path[0]],
+                nextValue: rhs[diff.path[0]]
+            }))
+        });
+    }
+
+    updatedProduct = await updatedProduct.save();
 
     return {
         statusCode: 200,
