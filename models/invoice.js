@@ -19,6 +19,7 @@ const invoiceSchema = new mongoose.Schema({
                     type: String,
                     required: true
                 },
+								slug: String,
                 thumbnail: String,
                 listedPrice: {
                     type: Number,
