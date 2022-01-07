@@ -29,8 +29,7 @@ const invoiceSchema = new mongoose.Schema({
                     required: true
                 },
                 discountPrice: {
-                    type: Number,
-                    default: 0
+                    type: Number
                 },
                 quantity: {
                     type: Number,
