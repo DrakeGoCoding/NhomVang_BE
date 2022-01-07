@@ -58,6 +58,7 @@ const invoiceSchema = new mongoose.Schema({
         default: "pending"
     },
     createdDate: { type: Date, default: Date.now, immutable: true },
+    modifiedDate: { type: Date, default: Date.now },
     logs: {
         type: [
             {
@@ -77,6 +78,14 @@ const invoiceSchema = new mongoose.Schema({
         ]
     }
 });
+
+invoiceSchema.pre(
+    ["save", "update", "updateOne", "updateMany", "findOneAndUpdate", "findByIdAndUpdate"],
+    async function (next) {
+        this.modifiedDate = Date.now();
+        next();
+    }
+);
 
 const Invoice = mongoose.model("Invoice", invoiceSchema);
 module.exports = Invoice;
