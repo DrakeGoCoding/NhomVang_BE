@@ -12,7 +12,8 @@ const {
 const getAllInvoices = async (req, res, next) => {
     try {
         const userId = req.user._id;
-        const { statusCode, data } = await invoiceService.getAllInvoices(userId);
+        const { limit, offset, ...filter } = req.query;
+        const { statusCode, data } = await invoiceService.getAllInvoices(userId, filter, limit, offset);
         res.status(statusCode).json(data);
     } catch (error) {
         next(error);

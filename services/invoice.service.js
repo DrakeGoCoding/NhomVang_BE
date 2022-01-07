@@ -1,4 +1,4 @@
-const Invoice = require("@models/invoice");
+const Invoice = require("../models/invoice");
 const Cart = require("@models/cart");
 const { responseInvoice } = require("@utils/responsor");
 const AppError = require("@utils/appError");
@@ -14,15 +14,28 @@ const { createPayment, executePayment, refundPayment, getPaymentById } = require
 /**
  * Get all invoices by user id
  * @param {String} userId
+ * @param {{
+ * 		status: String
+ * }} filter
+ * @param {Number} limit
+ * @param {Number} offset
  * @DrakeGoCoding 12/19/2021
  */
-const getAllInvoices = async userId => {
-    const invoiceList = await Invoice.find({ user: userId });
+const getAllInvoices = async (userId, filter = {}, limit = 10, offset = 0) => {
+    const query = {
+        $and: [{ user: userId }]
+    };
+    if (filter.status) {
+        query.$and.push({ status: filter.status });
+    }
+    const result = await Invoice.collection.find(query).sort({ modifiedDate: -1 });
+    const total = await result.count();
+    const invoiceList = await result.skip(offset).limit(limit).toArray();
     return {
         statusCode: 200,
         data: {
-            invoiceList: invoiceList.map(invoice => responseInvoice(invoice.toJSON())),
-            total: invoiceList.length
+            invoiceList: invoiceList.map(invoice => responseInvoice(invoice)),
+            total
         }
     };
 };
