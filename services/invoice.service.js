@@ -142,10 +142,12 @@ const cancelInvoice = async (userId, invoiceId) => {
         throw new AppError(403, "fail", FORBIDDEN);
     }
 
-    const payment = await getPaymentById(invoice.paymentId);
-    const amount = invoice.discountTotal || invoice.total;
-    const saleId = payment.transactions[0].related_resources[0].sale.id;
-    await refundPayment(saleId, amount);
+    if (paymentId) {
+        const payment = await getPaymentById(invoice.paymentId);
+        const amount = invoice.discountTotal || invoice.total;
+        const saleId = payment.transactions[0].related_resources[0].sale.id;
+        await refundPayment(saleId, amount);
+    }
 
     invoice.status = "failed";
     invoice.paymentStatus = "cancel";
