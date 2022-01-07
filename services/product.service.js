@@ -33,7 +33,7 @@ const getAllProducts = async (filter = {}, limit = 10, offset = 0) => {
                     },
                     {
                         $and: [
-                            { discountPrice: { $eq: 0 } },
+                            { discountPrice: { $in: [0, undefined, null] } },
                             { listedPrice: { $gte: filter.minPrice, $lte: filter.maxPrice } }
                         ]
                     }
