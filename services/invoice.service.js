@@ -81,7 +81,7 @@ const createInvoice = async (userId, username, products) => {
     const toRemoveFromCart = [];
     for (const product of products) {
         const { _id, quantity, listedPrice, discountPrice } = product;
-        if (cart.items.findIndex(item => item._id.toString() === _id) >= 0) {
+        if (cart.items.findIndex(item => item._id.toString() === _id.toString()) >= 0) {
             total += listedPrice * quantity;
             discountTotal += (discountPrice || listedPrice) * quantity;
             toRemoveFromCart.push(_id);

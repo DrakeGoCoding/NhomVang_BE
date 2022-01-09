@@ -45,16 +45,16 @@ const productSchema = new mongoose.Schema({
                 },
                 details: [
                     {
-						_id: false,
+                        _id: false,
                         field: String,
-						prevValue: mongoose.Schema.Types.Mixed,
+                        prevValue: mongoose.Schema.Types.Mixed,
                         nextValue: mongoose.Schema.Types.Mixed
                     }
                 ],
                 timestamp: { type: Date, default: Date.now, immutable: true }
             }
         ],
-		default: []
+        default: []
     }
 });
 
