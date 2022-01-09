@@ -43,11 +43,12 @@ const updateProduct = async (updater, slug, product) => {
         _id: undefined,
         __v: undefined,
         slug: undefined,
+				description: undefined,
         createdDate: undefined,
         modifiedDate: undefined,
         logs: undefined
     });
-    const rhs = { ...product, _id: undefined, __v: undefined };
+    const rhs = { ...product, _id: undefined, __v: undefined, description: undefined };
     const diffs = diff(lhs, rhs);
     if (diffs) {
         updatedProduct.logs.push({
