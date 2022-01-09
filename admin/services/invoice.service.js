@@ -1,5 +1,7 @@
 const Invoice = require("@models/invoice");
 const User = require("@models/user");
+const Product = require("@models/product");
+const mongoose = require("mongoose");
 const { responseInvoice } = require("@utils/responsor");
 const { getPaymentById, refundPayment } = require("@utils/paypal");
 const sendEmail = require("@utils/nodemailer");
@@ -131,6 +133,12 @@ const updateInvoice = async (username, invoiceId, invoice) => {
         });
         updatedInvoice.status = "delivered";
         updatedInvoice.products = invoice.products;
+
+        for (const product of updatedInvoice.products) {
+            const updatedProduct = await Product.findOne({ slug });
+            updatedProduct.inStock -= product.quantity;
+            await updatedProduct.save();
+        }
 
         sendEmail(updatedInvoice.user.email, INVOICE_DELIVER_SUCCESS, "invoiceDeliver.handlebars", {
             id: updatedInvoice._id.toString(),
