@@ -135,7 +135,7 @@ const updateInvoice = async (username, invoiceId, invoice) => {
         updatedInvoice.products = invoice.products;
 
         const session = await mongoose.startSession();
-        await session.withTransaction(() => {
+        await session.withTransaction(async () => {
             for (const product of updatedInvoice.products) {
                 const updatedProduct = await Product.findOne({ slug: product.slug });
                 updatedProduct.inStock -= product.quantity;
