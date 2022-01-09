@@ -135,7 +135,7 @@ const updateInvoice = async (username, invoiceId, invoice) => {
         updatedInvoice.products = invoice.products;
 
         for (const product of updatedInvoice.products) {
-            const updatedProduct = await Product.findOne({ slug });
+            const updatedProduct = await Product.findOne({ slug: product.slug });
             updatedProduct.inStock -= product.quantity;
             await updatedProduct.save();
         }
