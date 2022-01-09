@@ -134,17 +134,20 @@ const updateInvoice = async (username, invoiceId, invoice) => {
         updatedInvoice.status = "delivered";
         updatedInvoice.products = invoice.products;
 
-        for (const product of updatedInvoice.products) {
-            const updatedProduct = await Product.findOne({ slug: product.slug });
-            updatedProduct.inStock -= product.quantity;
-            await updatedProduct.save();
-        }
-
-        sendEmail(updatedInvoice.user.email, INVOICE_DELIVER_SUCCESS, "invoiceDeliver.handlebars", {
-            id: updatedInvoice._id.toString(),
-            invoice: updatedInvoice,
-            date: new Date().toDateString()
+        const session = await mongoose.startSession();
+        await session.withTransaction(() => {
+            for (const product of updatedInvoice.products) {
+                const updatedProduct = await Product.findOne({ slug: product.slug });
+                updatedProduct.inStock -= product.quantity;
+                await updatedProduct.save();
+            }
+            sendEmail(updatedInvoice.user.email, INVOICE_DELIVER_SUCCESS, "invoiceDeliver.handlebars", {
+                id: updatedInvoice._id.toString(),
+                invoice: updatedInvoice,
+                date: new Date().toDateString()
+            });
         });
+        session.endSession();
     } else if (invoice.status === "failed") {
         // refund if paymentStatus is done
         if (updatedInvoice.paymentStatus === "done" && updatedInvoice.paymentId) {
