@@ -1,4 +1,5 @@
-const Invoice = require("../models/invoice");
+const Invoice = require("@models/invoice");
+const Notification = require("@models/notification");
 const Cart = require("@models/cart");
 const { responseInvoice } = require("@utils/responsor");
 const AppError = require("@utils/appError");
@@ -110,6 +111,12 @@ const createInvoice = async (userId, username, products) => {
 
     await cart.save();
 
+    Notification.create({
+        user: userId,
+        action: "created a new invoice",
+        link: `/invoices/${newInvoice._id}`
+    });
+
     return {
         statusCode: 201,
         data: { invoice: responseInvoice(newInvoice.toJSON()) }
@@ -157,6 +164,12 @@ const cancelInvoice = async (userId, invoiceId) => {
     });
     await invoice.save();
 
+    Notification.create({
+        user: invoice.user,
+        action: `cancelled invoice ${invoiceId}`,
+        link: `/invoices/${invoiceId}`
+    });
+
     return {
         statusCode: 200,
         data: { status: "success", invoice: invoiceId }
@@ -198,6 +211,12 @@ const payWithPaypalSuccess = async (paymentId, payerId) => {
     });
     invoice.status = "in_progress";
     await invoice.save();
+
+    Notification.create({
+        user: invoice.user,
+        action: `paid for invoice ${invoiceId}`,
+        link: `/invoices/${invoiceId}`
+    });
 
     return {
         statusCode: 200,
