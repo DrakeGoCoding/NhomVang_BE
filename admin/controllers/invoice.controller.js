@@ -31,6 +31,25 @@ const getInvoice = async (req, res, next) => {
     }
 };
 
+const getMonthlyProfit = async (req, res, next) => {
+    try {
+        const year = req.query.year;
+        const { statusCode, data } = await invoiceService.getMonthlyProfit(year);
+        res.status(statusCode).json(data);
+    } catch (error) {
+        next(error);
+    }
+};
+
+const getTopSpendingClients = async (req, res, next) => {
+    try {
+        const { statusCode, data } = await invoiceService.getTopSpendingClients();
+        res.status(statusCode).json(data);
+    } catch (error) {
+        next(error);
+    }
+};
+
 const updateInvoice = async (req, res, next) => {
     try {
         const username = req.user.username;
@@ -69,5 +88,7 @@ const updateInvoice = async (req, res, next) => {
 module.exports = {
     getAllInvoices,
     getInvoice,
+    getMonthlyProfit,
+    getTopSpendingClients,
     updateInvoice
 };
