@@ -34,6 +34,7 @@ module.exports = {
     NOT_FOUND_INVOICE: "This invoice does not exist.",
     NOT_FOUND_NEWS: "This news does not exist.",
     NOT_FOUND_NEWSLETTER: "This newsletter does not exist.",
+    NOT_FOUND_NOTIFICATION: "Not found notification",
     NOT_FOUND_PRODUCT: "This product does not exist.",
     NOT_FOUND_PRODUCT_IN_CART: "A product does not exist in your cart.",
     NOT_FOUND_USER: "This account does not exist.",

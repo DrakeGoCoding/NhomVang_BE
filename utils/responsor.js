@@ -32,11 +32,17 @@ const responseNewsletter = newsletter => {
     return rest;
 };
 
+const responseNotification = notification => {
+    const { __v, ...rest } = notification;
+    return rest;
+};
+
 module.exports = {
     responseUser,
     responseNews,
     responseProduct,
     responseCart,
     responseInvoice,
-    responseNewsletter
+    responseNewsletter,
+    responseNotification
 };
