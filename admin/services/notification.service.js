@@ -1,4 +1,4 @@
-const Notification = require("../../models/notification");
+const Notification = require("@models/notification");
 const { responseNotification } = require("@utils/responsor");
 const AppError = require("@utils/appError");
 const { NOT_FOUND_NOTIFICATION } = require("@constants/error");

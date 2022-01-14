@@ -1,4 +1,4 @@
-const Invoice = require("../../models/invoice");
+const Invoice = require("@models/invoice");
 const User = require("@models/user");
 const Product = require("@models/product");
 const mongoose = require("mongoose");
