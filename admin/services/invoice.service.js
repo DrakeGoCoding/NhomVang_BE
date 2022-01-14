@@ -139,6 +139,7 @@ const getMonthlyProfit = async year => {
 
 const getTopSpendingClients = async () => {
     const aggregation = [
+        { $match: { status: "delivered" } },
         {
             $project: {
                 user: 1,
@@ -172,6 +173,7 @@ const getTopSpendingClients = async () => {
     ];
     const query = await Invoice.collection.aggregate(aggregation);
     const result = await query.toArray();
+    console.log(result);
     return {
         statusCode: 200,
         data: { topClientList: result }
