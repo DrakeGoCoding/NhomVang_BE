@@ -109,6 +109,76 @@ const getInvoice = async invoiceId => {
 };
 
 /**
+ *
+ * @param {Number} year
+ */
+const getMonthlyProfit = async year => {
+    const aggregation = [
+        {
+            $project: {
+                year: { $year: "$createdDate" },
+                month: { $month: "$createdDate" },
+                discountTotal: 1
+            }
+        },
+        { $match: { year } },
+        { $group: { _id: "$month", profit: { $sum: "$discountTotal" } } },
+        { $sort: { _id: 1 } }
+    ];
+    const query = await Invoice.collection.aggregate(aggregation);
+    const result = await query.toArray();
+    return {
+        statusCode: 200,
+        data: {
+            monthlyProfit: Array.from({ length: 12 }, (item, i) => {
+                return result.find(record => record._id === i + 1)?.profit || 0;
+            })
+        }
+    };
+};
+
+const getTopSpendingClients = async () => {
+    const aggregation = [
+        {
+            $project: {
+                user: 1,
+                discountTotal: 1
+            }
+        },
+        { $group: { _id: "$user", total: { $sum: "$discountTotal" } } },
+        {
+            $lookup: {
+                from: "users",
+                localField: "_id",
+                foreignField: "_id",
+                as: "user"
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                user: { $arrayElemAt: ["$user", 0] },
+                total: 1
+            }
+        },
+        {
+            $project: {
+                username: "$user.username",
+                total: 1
+            }
+        },
+        { $sort: { total: -1 } },
+        { $limit: 10 }
+    ];
+    const query = await Invoice.collection.aggregate(aggregation);
+    const result = await query.toArray();
+    return {
+        statusCode: 200,
+        data: { topClientList: result }
+    };
+};
+
+/**
  * Update an invoice by id
  * @param {String} invoiceId
  * @param {Invoice} invoice
@@ -181,5 +251,7 @@ const updateInvoice = async (username, invoiceId, invoice) => {
 module.exports = {
     getAllInvoices,
     getInvoice,
+    getMonthlyProfit,
+    getTopSpendingClients,
     updateInvoice
 };
