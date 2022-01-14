@@ -135,14 +135,18 @@ const deleteUser = async username => {
 /**
  * Count the number of users with filter
  * @param {{
- * 		subscribe: Boolean
+ * 		subscribe: Boolean,
+ * 		role: String
  * }} filter;
  * @returns
  */
 const countUser = async filter => {
-    const query = { $and: [{ role: "user" }] };
+    const query = { $and: [] };
     if (filter.subscribe === true) {
         query.$and.push({ email: { $exists: true } }, { isSubscribing: { $eq: true } });
+    }
+    if (filter.role) {
+        query.$and.push({ role: filter.role });
     }
     const result = await User.collection.find(query).project({
         _id: 0,
