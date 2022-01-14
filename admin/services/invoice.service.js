@@ -1,4 +1,4 @@
-const Invoice = require("@models/invoice");
+const Invoice = require("../../models/invoice");
 const User = require("@models/user");
 const Product = require("@models/product");
 const mongoose = require("mongoose");
@@ -108,20 +108,17 @@ const getInvoice = async invoiceId => {
     };
 };
 
-/**
- *
- * @param {Number} year
- */
 const getMonthlyProfit = async year => {
     const aggregation = [
         {
             $project: {
                 year: { $year: "$createdDate" },
                 month: { $month: "$createdDate" },
-                discountTotal: 1
+                discountTotal: 1,
+                status: 1
             }
         },
-        { $match: { year } },
+        { $match: { year, status: "delivered" } },
         { $group: { _id: "$month", profit: { $sum: "$discountTotal" } } },
         { $sort: { _id: 1 } }
     ];
@@ -173,10 +170,38 @@ const getTopSpendingClients = async () => {
     ];
     const query = await Invoice.collection.aggregate(aggregation);
     const result = await query.toArray();
-    console.log(result);
     return {
         statusCode: 200,
         data: { topClientList: result }
+    };
+};
+
+const getSummary = async () => {
+    const aggregation = [
+        {
+            $group: {
+                _id: null,
+                totalInvoiced: { $sum: "$discountTotal" },
+                totalReceived: {
+                    $sum: {
+                        $cond: [{ $eq: ["$status", "delivered"] }, "$discountTotal", 0]
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                totalInvoiced: 1,
+                totalReceived: 1
+            }
+        }
+    ];
+    const query = await Invoice.collection.aggregate(aggregation);
+    const result = (await query.toArray())[0];
+    return {
+        statusCode: 200,
+        data: result
     };
 };
 
@@ -255,5 +280,6 @@ module.exports = {
     getInvoice,
     getMonthlyProfit,
     getTopSpendingClients,
+    getSummary,
     updateInvoice
 };
