@@ -181,7 +181,11 @@ const getSummary = async () => {
         {
             $group: {
                 _id: null,
-                totalInvoiced: { $sum: "$discountTotal" },
+                totalInvoiced: {
+                    $sum: {
+                        $cond: [{ $eq: ["$paymentStatus", "done"] }, "$discountTotal", 0]
+                    }
+                },
                 totalReceived: {
                     $sum: {
                         $cond: [{ $eq: ["$status", "delivered"] }, "$discountTotal", 0]
