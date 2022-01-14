@@ -50,6 +50,15 @@ const getTopSpendingClients = async (req, res, next) => {
     }
 };
 
+const getSummary = async (req, res, next) => {
+    try {
+        const { statusCode, data } = await invoiceService.getSummary();
+        res.status(statusCode).json(data);
+    } catch (error) {
+        next(error);
+    }
+};
+
 const updateInvoice = async (req, res, next) => {
     try {
         const username = req.user.username;
@@ -90,5 +99,6 @@ module.exports = {
     getInvoice,
     getMonthlyProfit,
     getTopSpendingClients,
+		getSummary,
     updateInvoice
 };

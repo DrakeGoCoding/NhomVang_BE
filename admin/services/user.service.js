@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const User = require("../../models/user");
+const User = require("@models/user");
 const { responseUser } = require("@utils/responsor");
 const AppError = require("@utils/appError");
 const { NOT_FOUND_USER, FOUND_USER, FORBIDDEN } = require("@constants/error");
