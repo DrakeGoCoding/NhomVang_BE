@@ -41,7 +41,7 @@ const updateUser = async (req, res, next) => {
             throw new AppError(400, "fail", MISSING_USER_INPUT);
         }
 
-        user = Object.assign(req.body, {
+        user = Object.assign(user, {
             hash: undefined,
             salt: undefined,
             role: undefined,
